@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Reporte Turno B — Australis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B2A33;
+    --deep:#0E3B44;
+    --tide:#125866;
+    --foam:#EAF3F1;
+    --paper:#F6FAF9;
+    --salmon:#E2734A;
+    --salmon-dim:#F2C9B4;
+    --ok:#2E8B57;
+    --warn:#C8443C;
+    --line:#D3E2DF;
+    --ink-soft:#4C6B70;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:60px;
+  }
+  header.top{
+    background:linear-gradient(180deg,var(--deep) 0%,var(--tide) 100%);
+    color:var(--foam);
+    padding:28px 20px 22px;
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute;
+    right:-40px; top:-40px;
+    width:160px; height:160px;
+    border:1px solid rgba(234,243,241,0.15);
+    border-radius:50%;
+  }
+  header.top::before{
+    content:"";
+    position:absolute;
+    right:10px; top:20px;
+    width:100px; height:100px;
+    border:1px solid rgba(234,243,241,0.12);
+    border-radius:50%;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--salmon-dim);
+    margin:0 0 6px;
+  }
+  h1.title{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:26px;
+    margin:0 0 18px;
+    letter-spacing:-.01em;
+  }
+  .meta-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    position:relative;
+    z-index:1;
+  }
+  .meta-field{
+    background:rgba(246,250,249,0.08);
+    border:1px solid rgba(234,243,241,0.25);
+    border-radius:10px;
+    padding:8px 10px;
+  }
+  .meta-field label{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--salmon-dim);
+    margin-bottom:3px;
+  }
+  .meta-field input{
+    width:100%;
+    background:transparent;
+    border:none;
+    color:var(--foam);
+    font-family:'Space Grotesk',sans-serif;
+    font-size:15px;
+    font-weight:600;
+    outline:none;
+  }
+  .meta-field input::placeholder{color:rgba(234,243,241,0.4);}
+
+  main{max-width:640px;margin:0 auto;padding:18px 16px 0;}
+
+  section.card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:14px;
+    margin-bottom:16px;
+    overflow:hidden;
+  }
+  .card-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    padding:14px 16px 10px;
+    border-bottom:1px solid var(--line);
+  }
+  .card-head .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    letter-spacing:.06em;
+  }
+  .card-head h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:16px;
+    margin:2px 0 0;
+    color:var(--deep);
+  }
+  .row{
+    display:grid;
+    grid-template-columns:1fr 96px;
+    gap:8px;
+    padding:10px 16px;
+    border-bottom:1px solid #EEF4F3;
+    align-items:center;
+  }
+  .row:last-child{border-bottom:none;}
+  .slot-idx{
+    grid-column:1/3;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    color:var(--ink-soft);
+    letter-spacing:.08em;
+    margin-bottom:-2px;
+  }
+  select, .txt-input{
+    font-family:'Inter',sans-serif;
+    font-size:13.5px;
+    padding:8px 9px;
+    border-radius:8px;
+    border:1px solid var(--line);
+    background:var(--foam);
+    color:var(--ink);
+    width:100%;
+    appearance:none;
+  }
+  select.status{
+    font-weight:600;
+    text-align:center;
+  }
+  select.status.st-ok{background:#E5F3EA;border-color:#BEE1CB;color:var(--ok);}
+  select.status.st-warn{background:#FBEAE8;border-color:#F1C3BE;color:var(--warn);}
+  select.status.st-na{background:#EFF1F1;border-color:var(--line);color:var(--ink-soft);}
+
+  .pendientes-list{padding:10px 16px 14px;}
+  .pend-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 0;
+    border-bottom:1px dashed var(--line);
+  }
+  .pend-item:last-child{border-bottom:none;}
+  .pend-item .dot{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--warn); flex-shrink:0;
+  }
+  .pend-item .pname{font-size:13.5px; flex:1;}
+  .pend-item input{
+    width:120px;
+    font-size:12.5px;
+    padding:6px 8px;
+    border-radius:7px;
+    border:1px solid var(--line);
+    background:var(--foam);
+  }
+  .empty-note{
+    padding:16px;
+    font-size:13px;
+    color:var(--ink-soft);
+    font-style:italic;
+  }
+
+  .obs-row{
+    display:grid;
+    grid-template-columns:120px 1fr;
+    gap:10px;
+    padding:9px 16px;
+    border-bottom:1px solid #EEF4F3;
+    align-items:center;
+  }
+  .obs-row:last-child{border-bottom:none;}
+  .obs-row label{font-size:12.5px;color:var(--ink-soft);}
+
+  .obs-text{
+    margin:0;
+    padding:12px 16px;
+  }
+  textarea#obsFree{
+    width:100%;
+    min-height:64px;
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:9px;
+    background:var(--foam);
+    resize:vertical;
+  }
+  .obs-free-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--ink-soft);
+    display:block;
+    margin:0 16px 6px;
+  }
+
+  .actions{
+    position:sticky;
+    bottom:0;
+    background:linear-gradient(180deg, rgba(246,250,249,0) 0%, var(--paper) 30%);
+    padding:14px 16px 10px;
+    max-width:640px;
+    margin:0 auto;
+    display:flex;
+    gap:10px;
+  }
+  button{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    border:none;
+    border-radius:11px;
+    padding:13px 16px;
+    cursor:pointer;
+    flex:1;
+  }
+  button:focus-visible{outline:2px solid var(--tide); outline-offset:2px;}
+  button.primary{background:var(--salmon); color:#fff;}
+  button.primary:active{background:#CC5F38;}
+  button.ghost{background:#fff; color:var(--deep); border:1px solid var(--line);}
+
+  .sheet-backdrop{
+    position:fixed; inset:0;
+    background:rgba(11,42,51,0.5);
+    display:none;
+    align-items:flex-end;
+    z-index:20;
+  }
+  .sheet-backdrop.open{display:flex;}
+  .sheet{
+    background:#fff;
+    width:100%;
+    max-height:82vh;
+    border-radius:18px 18px 0 0;
+    padding:18px 16px 22px;
+    overflow-y:auto;
+  }
+  .sheet-head{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:10px;
+  }
+  .sheet-head h3{
+    font-family:'Space Grotesk',sans-serif;
+    margin:0; font-size:16px; color:var(--deep);
+  }
+  .sheet-head button.close{
+    background:var(--foam); color:var(--ink-soft);
+    border-radius:8px; padding:6px 10px; font-size:12px; flex:none;
+  }
+  pre#reportOut{
+    white-space:pre-wrap;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    line-height:1.55;
+    background:var(--foam);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px;
+    margin:0 0 14px;
+    color:var(--ink);
+  }
+  .sheet .actions{position:static; padding:0; background:none;}
+  .toast{
+    position:fixed; left:50%; bottom:24px; transform:translateX(-50%);
+    background:var(--deep); color:var(--foam);
+    padding:9px 16px; border-radius:20px; font-size:13px;
+    opacity:0; pointer-events:none; transition:opacity .2s;
+    font-family:'Inter',sans-serif; z-index:30;
+  }
+  .toast.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <p class="eyebrow">Barranco Amarillo Procesadora</p>
+  <h1 class="title">Turno B · Proceso Australis</h1>
+  <div class="meta-grid">
+    <div class="meta-field">
+      <label>Fecha</label>
+      <input type="date" id="fFecha">
+    </div>
+    <div class="meta-field">
+      <label>Lote</label>
+      <input type="text" id="fLote" placeholder="S2026245">
+    </div>
+    <div class="meta-field" style="grid-column:1/3">
+      <label>Dotación</label>
+      <input type="number" id="fDotacion" placeholder="11">
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section class="card">
+    <div class="card-head">
+      <div>
+        <h2>Pedido fresco</h2>
+      </div>
+      <span class="num">7 slots</span>
+    </div>
+    <div id="frescoRows"></div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <div>
+        <h2>Congelado IVP/IQF</h2>
+      </div>
+      <span class="num">7 slots</span>
+    </div>
+    <div id="congRows"></div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <div><h2>Pendientes / en proceso</h2></div>
+      <span class="num" id="pendCount">0</span>
+    </div>
+    <div class="pendientes-list" id="pendList">
+      <p class="empty-note">Se llena automáticamente al marcar ❌ En proceso en Pedido fresco.</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <div><h2>Observación</h2></div>
+    </div>
+    <div id="obsRows"></div>
+    <span class="obs-free-label">Notas adicionales (opcional)</span>
+    <div class="obs-text">
+      <textarea id="obsFree" placeholder="Una línea por observación..."></textarea>
+    </div>
+  </section>
+
+</main>
+
+<div class="actions">
+  <button class="ghost" id="btnReset">Reiniciar</button>
+  <button class="primary" id="btnGen">Generar reporte</button>
+</div>
+
+<div class="sheet-backdrop" id="sheetBackdrop">
+  <div class="sheet">
+    <div class="sheet-head">
+      <h3>Reporte generado</h3>
+      <button class="close" id="btnClose">Cerrar</button>
+    </div>
+    <pre id="reportOut"></pre>
+    <div class="actions">
+      <button class="primary" id="btnCopy">Copiar reporte</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Reporte copiado</div>
+
+<script>
+const FRESCO_OPTS = [
+  "T/F 2-6","T/F 2-6 BP",
+  "T/D 2-3 C/N","T/D 3-4 C/N","T/D 4-5 C/N","T/D 2-4 C/N","T/D 2-5 C/N",
+  "T/D 2-3 C/M","T/D 3-4 C/M","T/D 4-5 C/M","T/D 2-4 C/M","T/D 2-5 C/M"
+];
+const CONG_OPTS = [
+  "Prem. T/D 2-3 3-4 4-5 IVP","Prem. T/E SASHIMI IVP","Prem. T/E IVP","Prem. T/F IVP",
+  "Ind A. T/D 2-3 3-4 IVP","Ind A. T/D 2-3 IVP","Ind A. T/D 3-4 IVP",
+  "Ind A/B T/D IQF","Ind T/F IQF","Ind T/E IQF"
+];
+const OBS_FIELDS = [
+  {key:"sellado", label:"Sellado finaliza", type:"time", def:"23:25", suffix:" Hrs"},
+  {key:"film", label:"Saldo film", type:"text", def:"1 tapa 1 fondo"},
+  {key:"camara0", label:"Cámara 0", type:"text", def:"N/A"},
+  {key:"pouchVac", label:"Pouch vacíos", type:"number", def:"40"},
+  {key:"pouchAb", label:"Pouch abiertos", type:"number", def:"15"},
+  {key:"totalSellado", label:"Total sellado", type:"number", def:"3456"}
+];
+
+function buildOptions(list, includeBlank){
+  let html = includeBlank ? '<option value="">— seleccionar —</option>' : '';
+  list.forEach(o=> html += `<option value="${o}">${o}</option>`);
+  return html;
+}
+
+function buildFrescoRow(i){
+  return `
+  <div class="row" data-slot="${i}">
+    <div class="slot-idx">SLOT ${i+1}</div>
+    <select class="fresco-item">${buildOptions(FRESCO_OPTS,true)}</select>
+    <select class="fresco-status status st-na">
+      <option value="na" selected>N/A</option>
+      <option value="ok">✅ Completado</option>
+      <option value="warn">❌ En proceso</option>
+    </select>
+  </div>`;
+}
+function buildCongRow(i){
+  return `
+  <div class="row" data-slot="${i}">
+    <div class="slot-idx">SLOT ${i+1}</div>
+    <select class="cong-item">${buildOptions(CONG_OPTS,true)}</select>
+    <select class="cong-status status st-na">
+      <option value="na" selected>N/A</option>
+      <option value="ok">✅ Completado</option>
+    </select>
+  </div>`;
+}
+
+const frescoRowsEl = document.getElementById('frescoRows');
+const congRowsEl = document.getElementById('congRows');
+for(let i=0;i<7;i++){ frescoRowsEl.insertAdjacentHTML('beforeend', buildFrescoRow(i)); }
+for(let i=0;i<7;i++){ congRowsEl.insertAdjacentHTML('beforeend', buildCongRow(i)); }
+
+// Observación rows
+const obsRowsEl = document.getElementById('obsRows');
+OBS_FIELDS.forEach(f=>{
+  const inputType = f.type==="number" ? "number" : (f.type==="time" ? "time" : "text");
+  const val = f.type==="time" ? f.def : f.def;
+  obsRowsEl.insertAdjacentHTML('beforeend', `
+    <div class="obs-row">
+      <label>${f.label}</label>
+      <input class="txt-input obs-field" data-key="${f.key}" data-suffix="${f.suffix||''}" type="${inputType}" value="${val}">
+    </div>`);
+});
+
+// status color + pendientes sync
+function refreshStatusColor(sel){
+  sel.classList.remove('st-ok','st-warn','st-na');
+  if(sel.value==='ok') sel.classList.add('st-ok');
+  else if(sel.value==='warn') sel.classList.add('st-warn');
+  else sel.classList.add('st-na');
+}
+document.querySelectorAll('.status').forEach(sel=>{
+  refreshStatusColor(sel);
+  sel.addEventListener('change', ()=>{ refreshStatusColor(sel); renderPendientes(); });
+});
+document.querySelectorAll('.fresco-item, .cong-item').forEach(sel=>{
+  sel.addEventListener('change', renderPendientes);
+});
+
+function renderPendientes(){
+  const pendList = document.getElementById('pendList');
+  const rows = frescoRowsEl.querySelectorAll('.row');
+  const pendItems = [];
+  rows.forEach(row=>{
+    const item = row.querySelector('.fresco-item').value;
+    const status = row.querySelector('.fresco-status').value;
+    if(status==='warn' && item) pendItems.push(item);
+  });
+  document.getElementById('pendCount').textContent = pendItems.length;
+  if(pendItems.length===0){
+    pendList.innerHTML = '<p class="empty-note">Se llena automáticamente al marcar ❌ En proceso en Pedido fresco.</p>';
+    return;
+  }
+  pendList.innerHTML = pendItems.map((name,idx)=>`
+    <div class="pend-item">
+      <span class="dot"></span>
+      <span class="pname">${name}</span>
+      <input type="text" placeholder="Responsable" data-pend="${idx}">
+    </div>`).join('');
+}
+renderPendientes();
+
+function collectFresco(){
+  return Array.from(frescoRowsEl.querySelectorAll('.row')).map(row=>({
+    item: row.querySelector('.fresco-item').value,
+    status: row.querySelector('.fresco-status').value
+  })).filter(r=>r.item);
+}
+function collectCong(){
+  return Array.from(congRowsEl.querySelectorAll('.row')).map(row=>({
+    item: row.querySelector('.cong-item').value,
+    status: row.querySelector('.cong-status').value
+  })).filter(r=>r.item);
+}
+function collectObs(){
+  return OBS_FIELDS.map(f=>{
+    const el = obsRowsEl.querySelector(`[data-key="${f.key}"]`);
+    let val = el.value;
+    if(f.type==='time' && val) val = val + (f.suffix||'');
+    return {label:f.label, value: val};
+  }).filter(o=>o.value);
+}
+
+function generateReport(){
+  const fecha = document.getElementById('fFecha').value || '—';
+  const lote = document.getElementById('fLote').value || '—';
+  const dotacion = document.getElementById('fDotacion').value || '—';
+
+  let out = `TURNO B — Proceso: Australis\n`;
+  out += `Fecha: ${fecha}\n`;
+  out += `Lote: ${lote}\n`;
+  out += `Dotación: ${dotacion}\n\n`;
+
+  out += `Pedido fresco:\n`;
+  const fresco = collectFresco().filter(r=>r.status==='ok');
+  if(fresco.length===0) out += `(sin ítems completados)\n`;
+  fresco.forEach(r=> out += `• ${r.item} ✅ Completado\n`);
+
+  out += `\nCongelado IVP/IQF:\n`;
+  const cong = collectCong().filter(r=>r.status==='ok');
+  if(cong.length===0) out += `(sin ítems completados)\n`;
+  cong.forEach(r=> out += `• ${r.item}\n`);
+
+  out += `\nPendientes/en proceso:\n`;
+  const pendEls = document.querySelectorAll('#pendList .pend-item');
+  if(pendEls.length===0){
+    out += `(sin pendientes)\n`;
+  } else {
+    pendEls.forEach(el=>{
+      const name = el.querySelector('.pname').textContent;
+      const resp = el.querySelector('input').value.trim();
+      out += resp ? `• ${name} — ${resp}\n` : `• ${name}\n`;
+    });
+  }
+
+  out += `\nObservación:\n`;
+  const obs = collectObs();
+  obs.forEach(o=> out += `• ${o.label}: ${o.value}\n`);
+  const free = document.getElementById('obsFree').value.trim();
+  if(free){
+    free.split('\n').filter(l=>l.trim()).forEach(l=> out += `• ${l.trim()}\n`);
+  }
+
+  return out;
+}
+
+document.getElementById('btnGen').addEventListener('click', ()=>{
+  document.getElementById('reportOut').textContent = generateReport();
+  document.getElementById('sheetBackdrop').classList.add('open');
+});
+document.getElementById('btnClose').addEventListener('click', ()=>{
+  document.getElementById('sheetBackdrop').classList.remove('open');
+});
+document.getElementById('btnCopy').addEventListener('click', ()=>{
+  const text = document.getElementById('reportOut').textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 1600);
+  });
+});
+document.getElementById('btnReset').addEventListener('click', ()=>{
+  if(confirm('¿Reiniciar todos los campos del reporte?')) location.reload();
+});
+
+// default date = today
+(function setToday(){
+  const d = new Date();
+  const iso = d.toISOString().slice(0,10);
+  document.getElementById('fFecha').value = iso;
+})();
+</script>
+</body>
+</html>
