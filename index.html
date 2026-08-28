@@ -385,7 +385,8 @@
     </div>
     <pre id="reportOut"></pre>
     <div class="actions">
-      <button class="primary" id="btnCopy">Copiar reporte</button>
+      <button class="ghost" id="btnCopy">Copiar reporte</button>
+      <button class="primary" id="btnWhatsapp">Enviar por WhatsApp</button>
     </div>
   </div>
 </div>
@@ -399,7 +400,8 @@ const FRESCO_OPTS = [
   "T/D 2-3 C/M","T/D 3-4 C/M","T/D 4-5 C/M","T/D 2-4 C/M","T/D 2-5 C/M"
 ];
 const CONG_OPTS = [
-  "Prem. T/D 2-3 3-4 4-5 IVP","Prem. T/E SASHIMI IVP","Prem. T/E IVP","Prem. T/F IVP",
+  "Prem. T/D 2-3 3-4 4-5 IVP","Prem. T/D 2-3 3-4 IVP","Prem. T/D 3-4 4-5 IVP","Prem. T/D 2-3 IVP","Prem. T/D 3-4 IVP",
+  "Prem. T/E SASHIMI IVP","Prem. T/E IVP","Prem. T/F IVP",
   "Ind A. T/D 2-3 3-4 IVP","Ind A. T/D 2-3 IVP","Ind A. T/D 3-4 IVP",
   "Ind A/B T/D IQF","Ind T/F IQF","Ind T/E IQF"
 ];
@@ -407,8 +409,8 @@ const OBS_FIELDS = [
   {key:"sellado", label:"Sellado finaliza", type:"time", def:"23:25", suffix:" Hrs"},
   {key:"film", label:"Saldo film", type:"text", def:"1 tapa 1 fondo"},
   {key:"camara0", label:"Cámara 0", type:"text", def:"N/A"},
-  {key:"pouchVac", label:"Pouch vacíos", type:"number", def:"40"},
-  {key:"pouchAb", label:"Pouch abiertos", type:"number", def:"15"},
+  {key:"pouchVac", label:"Pouch vacíos", type:"text", def:"60 correspondientes a cambios de rollo, ciclaje antes de comenzar y/o cambios de Trim"},
+  {key:"pouchAb", label:"Pouch abiertos", type:"text", def:"7 por sello contaminado y 2 por máquina"},
   {key:"totalSellado", label:"Total sellado", type:"number", def:"3456"}
 ];
 
@@ -575,6 +577,14 @@ document.getElementById('btnCopy').addEventListener('click', ()=>{
     t.classList.add('show');
     setTimeout(()=>t.classList.remove('show'), 1600);
   });
+});
+document.getElementById('btnWhatsapp').addEventListener('click', ()=>{
+  const text = document.getElementById('reportOut').textContent;
+  if(navigator.share){
+    navigator.share({ text }).catch(()=>{});
+  } else {
+    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+  }
 });
 document.getElementById('btnReset').addEventListener('click', ()=>{
   if(confirm('¿Reiniciar todos los campos del reporte?')) location.reload();
