@@ -474,6 +474,75 @@
   @media (prefers-reduced-motion: reduce){
     #view-avance *{ transition:none !important; }
   }
+
+  /* ================= SEPARACIÓN DE CALIBRES (scoped) ================= */
+  #view-calibres{
+    --bg:#F3F6F5;
+    --panel:#FFFFFF;
+    --ink:#152526;
+    --ink-soft:#5B6E70;
+    --line:#DCE4E3;
+    --teal:#0F454F;
+    --teal-deep:#0B333B;
+    --steel:#3A6B75;
+    --salmon:#E8785A;
+    --salmon-soft:#FCE3DA;
+    --ok:#3E8E6B;
+    --radius:14px;
+    background:var(--bg);
+    color:var(--ink);
+  }
+  #view-calibres h1, #view-calibres h2, #view-calibres h3{font-family:'Space Grotesk',sans-serif;margin:0;}
+  #view-calibres .mono{font-family:'IBM Plex Mono',monospace;}
+
+  #view-calibres .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px;}
+  #view-calibres .card h2{font-size:15px;color:var(--teal-deep);margin-bottom:2px;}
+  #view-calibres .card .sub{font-size:12.5px;color:var(--ink-soft);margin-bottom:12px;}
+
+  #view-calibres label{font-size:12px;color:var(--ink-soft);display:block;margin-bottom:4px;}
+  #view-calibres input[type=number]{width:100%;padding:9px 10px;border-radius:9px;border:1px solid var(--line);background:#FBFCFC;font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--ink);}
+  #view-calibres input[type=number]:focus{outline:2px solid var(--steel);outline-offset:1px;}
+
+  #view-calibres .conv-row{display:flex;gap:10px;align-items:flex-end;}
+  #view-calibres .conv-row > div{flex:1;}
+
+  #view-calibres .rend-grid{display:flex;gap:14px;margin-bottom:14px;}
+  #view-calibres .rend-grid > div{flex:1;}
+  #view-calibres .rend-note{font-size:12px;color:var(--ink-soft);margin-top:8px;}
+
+  #view-calibres .chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+  #view-calibres .chip{padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:#F0F4F3;font-size:13px;font-weight:600;color:var(--teal-deep);cursor:pointer;font-family:'IBM Plex Mono',monospace;}
+  #view-calibres .chip.active{background:var(--salmon);border-color:var(--salmon);color:#fff;}
+  #view-calibres .custom-fields{display:flex;gap:10px;}
+  #view-calibres .custom-fields > div{flex:1;}
+
+  #view-calibres .result-box{margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--salmon-soft);border:1px dashed var(--salmon);}
+  #view-calibres .result-box .big{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:700;color:var(--teal-deep);}
+  #view-calibres .result-box .small{font-size:12px;color:var(--ink-soft);margin-top:3px;}
+
+  #view-calibres .ruler-wrap{padding-top:6px;}
+  #view-calibres .ruler{position:relative;height:64px;margin:10px 4px 26px;}
+  #view-calibres .ruler .axis{position:absolute;left:0;right:0;top:34px;height:1px;background:var(--line);}
+  #view-calibres .ruler .tick{position:absolute;top:30px;width:1px;height:9px;background:var(--ink-soft);}
+  #view-calibres .ruler .tick-label{position:absolute;top:41px;font-size:10px;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;transform:translateX(-50%);}
+  #view-calibres .ruler .seg{position:absolute;top:14px;height:16px;border-radius:8px;background:var(--steel);opacity:.85;}
+  #view-calibres .ruler .seg.match{background:var(--salmon);}
+  #view-calibres .ruler .target{position:absolute;top:6px;height:32px;border-radius:9px;border:2px dashed var(--teal-deep);background:rgba(15,69,79,0.06);}
+  #view-calibres .legend{display:flex;gap:16px;font-size:11.5px;color:var(--ink-soft);margin-top:2px;}
+  #view-calibres .legend span{display:inline-flex;align-items:center;gap:5px;}
+  #view-calibres .legend .dot{width:9px;height:9px;border-radius:3px;display:inline-block;}
+
+  #view-calibres table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  #view-calibres th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--ink-soft);padding:6px 6px;border-bottom:1px solid var(--line);}
+  #view-calibres td{padding:6px 6px;border-bottom:1px solid #EEF2F1;vertical-align:middle;}
+  #view-calibres tr.match td{background:var(--salmon-soft);}
+  #view-calibres td input[type=number]{padding:6px 7px;font-size:12.5px;}
+  #view-calibres .kg{color:var(--ink-soft);font-size:11px;}
+  #view-calibres .badge{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:999px;background:#E3EFE9;color:var(--ok);font-family:'IBM Plex Mono',monospace;}
+  #view-calibres .badge.no{background:#F0F0F0;color:#9AA5A6;}
+  #view-calibres .rm-btn{border:none;background:none;color:#B9433B;font-size:16px;cursor:pointer;line-height:1;}
+  #view-calibres .add-row{margin-top:10px;width:100%;padding:10px;border-radius:9px;border:1px dashed var(--steel);background:none;color:var(--teal);font-weight:600;font-size:13px;cursor:pointer;}
+  #view-calibres .cal-footer{text-align:center;font-size:11px;color:var(--ink-soft);padding:20px;}
 </style>
 </head>
 <body>
@@ -499,6 +568,14 @@
       <span class="nav-card-text">
         <span class="nav-card-title">Control de Avance</span>
         <span class="nav-card-desc">Kilos, piezas, bandejas y pilas restantes de un pedido</span>
+      </span>
+      <span class="nav-card-arrow">›</span>
+    </button>
+    <button class="nav-card" data-nav="view-calibres">
+      <span class="nav-card-icon">🐟</span>
+      <span class="nav-card-text">
+        <span class="nav-card-title">Separación de Calibres</span>
+        <span class="nav-card-desc">Convierte lb ⇄ kg y calcula el calibre de pieza entera para tu pedido</span>
       </span>
       <span class="nav-card-arrow">›</span>
     </button>
@@ -693,6 +770,121 @@
 
     <footer class="ca-footer">Redondeos hacia arriba — siempre se sugiere completar en piezas/bandejas/pilas enteras</footer>
   </div>
+</div>
+
+<!-- ============ SEPARACIÓN DE CALIBRES ============ -->
+<div id="view-calibres" class="view">
+  <div class="subnav">
+    <button class="back-btn" data-nav="view-home">← Inicio</button>
+  </div>
+  <header class="top">
+    <p class="eyebrow">Proceso Australis — control de calibre</p>
+    <h1 class="title">Separación de Calibres</h1>
+    <div class="sub-home">Convierte el peso de la pieza entera (lb ⇄ kg) y calcula qué calibre de container entrega el filete que pide tu pedido.</div>
+  </header>
+
+  <main>
+
+    <div class="card">
+      <h2>Conversor rápido</h2>
+      <div class="sub">Rango de peso de la pieza entera — ej. 8 a 10 lb. Deja mín. = máx. para un solo peso.</div>
+      <label style="margin-top:2px;">Mínimo</label>
+      <div class="conv-row">
+        <div>
+          <label for="calLbMinInput">Libras (lb)</label>
+          <input type="number" id="calLbMinInput" step="0.01" placeholder="0.00">
+        </div>
+        <div>
+          <label for="calKgMinInput">Kilos (kg)</label>
+          <input type="number" id="calKgMinInput" step="0.01" placeholder="0.00">
+        </div>
+      </div>
+      <label style="margin-top:10px;">Máximo</label>
+      <div class="conv-row">
+        <div>
+          <label for="calLbMaxInput">Libras (lb)</label>
+          <input type="number" id="calLbMaxInput" step="0.01" placeholder="0.00">
+        </div>
+        <div>
+          <label for="calKgMaxInput">Kilos (kg)</label>
+          <input type="number" id="calKgMaxInput" step="0.01" placeholder="0.00">
+        </div>
+      </div>
+      <button class="add-row" id="calAddRangeToTableBtn" style="margin-top:12px;">+ Agregar este rango a la tabla de calibres</button>
+    </div>
+
+    <div class="card">
+      <h2>Rendimiento de filete</h2>
+      <div class="sub">% del peso de la pieza entera que rinde <b>un</b> filete, por variante de corte</div>
+      <div class="rend-grid">
+        <div>
+          <label for="calRendCN">C/N — % por filete</label>
+          <input type="number" id="calRendCN" min="1" max="99" step="0.5" value="33">
+        </div>
+        <div>
+          <label for="calRendCM">C/M — % por filete</label>
+          <input type="number" id="calRendCM" min="1" max="99" step="0.5" value="33">
+        </div>
+      </div>
+      <label>Variante activa para los cálculos</label>
+      <div class="chip-row" id="calVariantRow" style="margin-bottom:0;"></div>
+      <div class="rend-note">Ajusta cada rendimiento según tu estándar real de planta. La variante activa define qué % se usa en la tabla, la regla y el buscador inverso.</div>
+    </div>
+
+    <div class="card">
+      <h2>Pedido objetivo</h2>
+      <div class="sub">Peso de filete que necesitas entregar</div>
+      <div class="chip-row" id="calChipRow"></div>
+      <div class="custom-fields" id="calCustomFields" style="display:none;">
+        <div>
+          <label for="calCustomMin">Mín. filete (lb)</label>
+          <input type="number" id="calCustomMin" step="0.1" value="2">
+        </div>
+        <div>
+          <label for="calCustomMax">Máx. filete (lb)</label>
+          <input type="number" id="calCustomMax" step="0.1" value="3">
+        </div>
+      </div>
+      <div class="result-box">
+        <div class="big" id="calResultBig">—</div>
+        <div class="small" id="calResultSmall">Selecciona un pedido para ver el calibre de pieza entera que necesitas.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Regla de calibres</h2>
+      <div class="sub">Cada barra es un calibre de pieza entera (lb). En naranjo, los que calzan con tu pedido.</div>
+      <div class="ruler-wrap">
+        <div class="ruler" id="calRuler"></div>
+      </div>
+      <div class="legend">
+        <span><span class="dot" style="background:var(--steel)"></span>Calibre</span>
+        <span><span class="dot" style="background:var(--salmon)"></span>Coincide con pedido</span>
+        <span><span class="dot" style="background:transparent;border:2px dashed var(--teal-deep)"></span>Rango ideal calculado</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Tabla de calibres</h2>
+      <div class="sub">Edita los rangos según lo que llegue en el container. Se guarda automáticamente en este dispositivo.</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Calibre (lb)</th>
+            <th>Calibre (kg)</th>
+            <th>Filete (lb)</th>
+            <th>Pedido</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="calTableBody"></tbody>
+      </table>
+      <button class="add-row" id="calAddRowBtn">+ Agregar rango de calibre</button>
+    </div>
+
+  </main>
+
+  <footer class="cal-footer">Los datos de calibres y rendimiento quedan guardados solo en este dispositivo/navegador.</footer>
 </div>
 
 <div class="toast" id="toast">Copiado</div>
@@ -1013,6 +1205,341 @@ document.getElementById('btnCopyAvance').addEventListener('click', ()=>{
 
 caRenderStack();
 caCompute();
+
+/* ============ SEPARACIÓN DE CALIBRES ============ */
+(function(){
+  const LB_KG = 0.45359237;
+  const STORAGE_KEY = 'calibresAppV1';
+
+  const presets = [
+    {key:'2-3', min:2, max:3, label:'2–3 lb'},
+    {key:'3-4', min:3, max:4, label:'3–4 lb'},
+    {key:'4-5', min:4, max:5, label:'4–5 lb'},
+    {key:'2-4', min:2, max:4, label:'2–4 lb'},
+    {key:'2-5', min:2, max:5, label:'2–5 lb'},
+    {key:'custom', min:null, max:null, label:'Personalizado'}
+  ];
+
+  function defaultState(){
+    return {
+      rendimientos: {CN:33, CM:33},
+      activeVariant: 'CN',
+      activePreset: '2-3',
+      customMin: 2,
+      customMax: 3,
+      calibres: [
+        {id:1, min:6, max:8},
+        {id:2, min:8, max:9},
+        {id:3, min:9, max:10},
+        {id:4, min:10, max:11},
+        {id:5, min:11, max:12},
+        {id:6, min:12, max:13}
+      ],
+      nextId: 7
+    };
+  }
+
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return defaultState();
+      const parsed = JSON.parse(raw);
+      if(!parsed.calibres || !parsed.calibres.length) return defaultState();
+      if(!parsed.rendimientos){
+        const old = parsed.rendimiento || 33;
+        parsed.rendimientos = {CN: old, CM: old};
+        parsed.activeVariant = 'CN';
+      }
+      return parsed;
+    }catch(e){
+      return defaultState();
+    }
+  }
+
+  let state = loadState();
+
+  function saveState(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function lbToKg(lb){ return lb * LB_KG; }
+  function fmt(n, d=2){ return Number(n).toFixed(d); }
+
+  function getTarget(){
+    if(state.activePreset === 'custom'){
+      return {min: parseFloat(state.customMin)||0, max: parseFloat(state.customMax)||0, label:'Personalizado'};
+    }
+    const p = presets.find(p => p.key === state.activePreset);
+    return {min:p.min, max:p.max, label:p.label};
+  }
+
+  function activeRendimiento(){
+    return state.rendimientos[state.activeVariant];
+  }
+
+  function filletRange(calMin, calMax){
+    const r = activeRendimiento()/100;
+    return {min: calMin*r, max: calMax*r};
+  }
+
+  function overlaps(a,b){
+    return a.min <= b.max && b.min <= a.max;
+  }
+
+  function idealCalibreForTarget(target){
+    const r = activeRendimiento()/100;
+    if(r <= 0) return {min:0,max:0};
+    return {min: target.min/r, max: target.max/r};
+  }
+
+  /* ---------- render ---------- */
+
+  function renderChips(){
+    const row = document.getElementById('calChipRow');
+    row.innerHTML = '';
+    presets.forEach(p=>{
+      const chip = document.createElement('div');
+      chip.className = 'chip' + (state.activePreset===p.key ? ' active':'');
+      chip.textContent = p.label;
+      chip.onclick = ()=>{ state.activePreset = p.key; saveState(); renderAll(); };
+      row.appendChild(chip);
+    });
+    document.getElementById('calCustomFields').style.display = state.activePreset==='custom' ? 'flex':'none';
+  }
+
+  const variants = [
+    {key:'CN', label:'C/N'},
+    {key:'CM', label:'C/M'}
+  ];
+
+  function renderVariantChips(){
+    const row = document.getElementById('calVariantRow');
+    row.innerHTML = '';
+    variants.forEach(v=>{
+      const chip = document.createElement('div');
+      chip.className = 'chip' + (state.activeVariant===v.key ? ' active':'');
+      chip.textContent = `${v.label} · ${state.rendimientos[v.key]}%`;
+      chip.onclick = ()=>{ state.activeVariant = v.key; saveState(); renderAll(); };
+      row.appendChild(chip);
+    });
+  }
+
+  function renderResult(){
+    const target = getTarget();
+    const ideal = idealCalibreForTarget(target);
+    const variantLabel = variants.find(v=>v.key===state.activeVariant).label;
+    document.getElementById('calResultBig').textContent =
+      `${fmt(ideal.min,1)}–${fmt(ideal.max,1)} lb`;
+    document.getElementById('calResultSmall').textContent =
+      `(${fmt(lbToKg(ideal.min))}–${fmt(lbToKg(ideal.max))} kg) de pieza entera → filete de ${target.label} al ${activeRendimiento()}% de rendimiento (${variantLabel})`;
+  }
+
+  function renderRuler(){
+    const ruler = document.getElementById('calRuler');
+    ruler.innerHTML = '';
+    const target = getTarget();
+    const idealCal = idealCalibreForTarget(target);
+
+    let lo = Math.min(...state.calibres.map(c=>c.min), idealCal.min);
+    let hi = Math.max(...state.calibres.map(c=>c.max), idealCal.max);
+    lo = Math.floor(lo - 1);
+    hi = Math.ceil(hi + 1);
+    if(hi <= lo) hi = lo + 1;
+    const span = hi - lo;
+
+    const axis = document.createElement('div');
+    axis.className='axis';
+    ruler.appendChild(axis);
+
+    for(let v=lo; v<=hi; v++){
+      const pct = ((v-lo)/span)*100;
+      const tick = document.createElement('div');
+      tick.className='tick';
+      tick.style.left = pct+'%';
+      ruler.appendChild(tick);
+      const lbl = document.createElement('div');
+      lbl.className='tick-label';
+      lbl.style.left = pct+'%';
+      lbl.textContent = v;
+      ruler.appendChild(lbl);
+    }
+
+    state.calibres.forEach((c)=>{
+      const fr = filletRange(c.min,c.max);
+      const isMatch = overlaps(fr, target);
+      const left = ((c.min-lo)/span)*100;
+      const width = ((c.max-c.min)/span)*100;
+      const seg = document.createElement('div');
+      seg.className = 'seg' + (isMatch ? ' match':'');
+      seg.style.left = left+'%';
+      seg.style.width = Math.max(width,1.2)+'%';
+      seg.style.top = '14px';
+      seg.title = `${c.min}-${c.max} lb`;
+      ruler.appendChild(seg);
+    });
+
+    const tLeft = ((idealCal.min-lo)/span)*100;
+    const tWidth = ((idealCal.max-idealCal.min)/span)*100;
+    const targetBar = document.createElement('div');
+    targetBar.className='target';
+    targetBar.style.left = tLeft+'%';
+    targetBar.style.width = Math.max(tWidth,1.2)+'%';
+    ruler.appendChild(targetBar);
+  }
+
+  function renderTable(){
+    const target = getTarget();
+    const body = document.getElementById('calTableBody');
+    body.innerHTML = '';
+    state.calibres
+      .slice()
+      .sort((a,b)=>a.min-b.min)
+      .forEach(c=>{
+        const fr = filletRange(c.min,c.max);
+        const isMatch = overlaps(fr, target);
+        const tr = document.createElement('tr');
+        if(isMatch) tr.className='match';
+        tr.innerHTML = `
+          <td>
+            <div style="display:flex; gap:4px; align-items:center;">
+              <input type="number" step="0.1" value="${c.min}" data-id="${c.id}" data-field="min" style="width:56px;">
+              <span>–</span>
+              <input type="number" step="0.1" value="${c.max}" data-id="${c.id}" data-field="max" style="width:56px;">
+            </div>
+          </td>
+          <td class="kg mono">${fmt(lbToKg(c.min))}–${fmt(lbToKg(c.max))}</td>
+          <td class="mono">${fmt(fr.min,2)}–${fmt(fr.max,2)} lb</td>
+          <td>${isMatch ? '<span class="badge">✓ Calza</span>' : '<span class="badge no">—</span>'}</td>
+          <td><button class="rm-btn" data-rm="${c.id}" title="Eliminar">✕</button></td>
+        `;
+        body.appendChild(tr);
+      });
+
+    body.querySelectorAll('input[data-field]').forEach(inp=>{
+      inp.addEventListener('input', e=>{
+        const id = parseInt(e.target.dataset.id);
+        const field = e.target.dataset.field;
+        const val = parseFloat(e.target.value);
+        const row = state.calibres.find(c=>c.id===id);
+        if(row && !isNaN(val)){
+          row[field] = val;
+          saveState();
+          renderRuler();
+          renderTableBadgesOnly();
+        }
+      });
+    });
+    body.querySelectorAll('button[data-rm]').forEach(btn=>{
+      btn.addEventListener('click', e=>{
+        const id = parseInt(e.target.dataset.rm);
+        state.calibres = state.calibres.filter(c=>c.id!==id);
+        saveState();
+        renderAll();
+      });
+    });
+  }
+
+  function renderTableBadgesOnly(){
+    const target = getTarget();
+    document.querySelectorAll('#calTableBody tr').forEach(tr=>{
+      const minInput = tr.querySelector('input[data-field="min"]');
+      const maxInput = tr.querySelector('input[data-field="max"]');
+      if(!minInput || !maxInput) return;
+      const min = parseFloat(minInput.value), max = parseFloat(maxInput.value);
+      const fr = filletRange(min,max);
+      const isMatch = overlaps(fr, target);
+      tr.className = isMatch ? 'match' : '';
+      tr.querySelector('td:nth-child(2)').textContent = `${fmt(lbToKg(min))}–${fmt(lbToKg(max))}`;
+      tr.querySelector('td:nth-child(3)').textContent = `${fmt(fr.min,2)}–${fmt(fr.max,2)} lb`;
+      tr.querySelector('td:nth-child(4)').innerHTML = isMatch ? '<span class="badge">✓ Calza</span>' : '<span class="badge no">—</span>';
+    });
+  }
+
+  function renderAll(){
+    renderChips();
+    renderVariantChips();
+    renderResult();
+    renderRuler();
+    renderTable();
+  }
+
+  /* ---------- conversor rápido (rango) ---------- */
+  function bindConvPair(lbId, kgId){
+    const lbEl = document.getElementById(lbId);
+    const kgEl = document.getElementById(kgId);
+    lbEl.addEventListener('input', e=>{
+      const lb = parseFloat(e.target.value);
+      kgEl.value = isNaN(lb) ? '' : fmt(lbToKg(lb));
+    });
+    kgEl.addEventListener('input', e=>{
+      const kg = parseFloat(e.target.value);
+      lbEl.value = isNaN(kg) ? '' : fmt(kg/LB_KG);
+    });
+  }
+  bindConvPair('calLbMinInput','calKgMinInput');
+  bindConvPair('calLbMaxInput','calKgMaxInput');
+
+  document.getElementById('calAddRangeToTableBtn').addEventListener('click', ()=>{
+    const lbMin = parseFloat(document.getElementById('calLbMinInput').value);
+    const lbMax = parseFloat(document.getElementById('calLbMaxInput').value);
+    if(isNaN(lbMin) || isNaN(lbMax)){
+      alert('Ingresa el mínimo y el máximo (en libras o en kilos) antes de agregar el rango.');
+      return;
+    }
+    const min = Math.min(lbMin, lbMax);
+    const max = Math.max(lbMin, lbMax);
+    state.calibres.push({id: state.nextId++, min, max});
+    saveState();
+    renderAll();
+  });
+
+  /* ---------- events ---------- */
+
+  document.getElementById('calRendCN').value = state.rendimientos.CN;
+  document.getElementById('calRendCM').value = state.rendimientos.CM;
+  document.getElementById('calRendCN').addEventListener('input', e=>{
+    const v = parseFloat(e.target.value);
+    if(!isNaN(v) && v>0){
+      state.rendimientos.CN = v;
+      saveState();
+      renderVariantChips();
+      renderResult();
+      renderRuler();
+      renderTableBadgesOnly();
+    }
+  });
+  document.getElementById('calRendCM').addEventListener('input', e=>{
+    const v = parseFloat(e.target.value);
+    if(!isNaN(v) && v>0){
+      state.rendimientos.CM = v;
+      saveState();
+      renderVariantChips();
+      renderResult();
+      renderRuler();
+      renderTableBadgesOnly();
+    }
+  });
+
+  document.getElementById('calCustomMin').value = state.customMin;
+  document.getElementById('calCustomMax').value = state.customMax;
+  document.getElementById('calCustomMin').addEventListener('input', e=>{
+    state.customMin = parseFloat(e.target.value)||0;
+    saveState(); renderResult(); renderRuler(); renderTableBadgesOnly();
+  });
+  document.getElementById('calCustomMax').addEventListener('input', e=>{
+    state.customMax = parseFloat(e.target.value)||0;
+    saveState(); renderResult(); renderRuler(); renderTableBadgesOnly();
+  });
+
+  document.getElementById('calAddRowBtn').addEventListener('click', ()=>{
+    const lastMax = state.calibres.length ? Math.max(...state.calibres.map(c=>c.max)) : 6;
+    state.calibres.push({id: state.nextId++, min: lastMax, max: lastMax+1});
+    saveState();
+    renderAll();
+  });
+
+  renderAll();
+})();
 </script>
 </body>
 </html>
