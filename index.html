@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Reporte Turno B — Australis</title>
+<title>BA Procesadora — Turno B</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="apple-touch-icon" href="icon.png">
 <style>
   :root{
@@ -28,8 +29,50 @@
     color:var(--ink);
     font-family:'Inter',system-ui,sans-serif;
     -webkit-font-smoothing:antialiased;
-    padding-bottom:60px;
   }
+
+  /* ---------- view switching ---------- */
+  .view{display:none;}
+  .view.active{display:block;padding-bottom:60px;}
+
+  /* ---------- shared subnav / back button ---------- */
+  .subnav{
+    max-width:640px;margin:0 auto;
+    padding:12px 16px 0;
+    background:var(--paper);
+  }
+  .back-btn{
+    background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;
+    color:var(--tide);
+    padding:6px 2px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:4px;
+  }
+
+  /* ---------- home ---------- */
+  .home-main{max-width:640px;margin:0 auto;padding:18px 16px 24px;}
+  .sub-home{
+    color:var(--salmon-dim); font-size:13px; position:relative; z-index:1;
+  }
+  .nav-card{
+    width:100%;
+    display:flex;align-items:center;gap:14px;
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:16px;margin-bottom:14px;
+    font-family:'Inter',sans-serif;text-align:left;cursor:pointer;
+  }
+  .nav-card:active{transform:scale(0.98);}
+  .nav-card-icon{font-size:26px;flex-shrink:0;}
+  .nav-card-text{flex:1;display:flex;flex-direction:column;gap:2px;}
+  .nav-card-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;color:var(--deep);}
+  .nav-card-desc{font-size:12.5px;color:var(--ink-soft);}
+  .nav-card-arrow{font-size:22px;color:var(--salmon);flex-shrink:0;}
+  .nav-card.dark{background:#14181a;border-color:#303a40;}
+  .nav-card.dark .nav-card-title{color:#edeae2;}
+  .nav-card.dark .nav-card-desc{color:#8b98a0;}
+  .nav-card.dark .nav-card-arrow{color:#e8a33d;}
+
+  /* ---------- reporte turno ---------- */
   header.top{
     background:linear-gradient(180deg,var(--deep) 0%,var(--tide) 100%);
     color:var(--foam);
@@ -305,96 +348,373 @@
     font-family:'Inter',sans-serif; z-index:30;
   }
   .toast.show{opacity:1;}
+
+  /* ================= CONTROL DE AVANCE (scoped) ================= */
+  #view-avance{
+    --ca-bg:#14181a;
+    --ca-surface:#1e262b;
+    --ca-surface-2:#242d33;
+    --ca-line:#303a40;
+    --ca-amber:#e8a33d;
+    --ca-amber-dim: rgba(232,163,61,0.16);
+    --ca-steel:#5b87a6;
+    --ca-text:#edeae2;
+    --ca-muted:#8b98a0;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(91,135,166,0.14), transparent 60%),
+      var(--ca-bg);
+    color:var(--ca-text);
+  }
+  #view-avance .subnav{ background:var(--ca-bg); max-width:480px; }
+  #view-avance .back-btn{ color:var(--ca-steel); }
+  #view-avance .ca-wrap{max-width:480px;margin:0 auto;padding:16px 14px 60px;}
+  #view-avance .ca-header{margin-bottom:22px;}
+  #view-avance .ca-eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--ca-steel);
+    display:flex; align-items:center; gap:8px; margin-bottom:8px;
+  }
+  #view-avance .ca-eyebrow::before{
+    content:""; width:7px;height:7px;border-radius:50%;
+    background:var(--ca-amber); box-shadow:0 0 0 3px var(--ca-amber-dim);
+  }
+  #view-avance h1{
+    font-family:'Space Grotesk', sans-serif; font-weight:700;
+    font-size:25px; line-height:1.15; margin:0 0 4px; letter-spacing:-0.01em;
+    color:var(--ca-text);
+  }
+  #view-avance .ca-sub{ color:var(--ca-muted); font-size:13.5px; }
+  #view-avance .ca-card{
+    background:var(--ca-surface); border:1px solid var(--ca-line);
+    border-radius:16px; padding:18px 16px; margin-bottom:14px;
+    box-shadow:0 8px 20px -12px rgba(0,0,0,0.5);
+  }
+  #view-avance .ca-card-title{
+    font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:13px;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--ca-text);
+    display:flex; align-items:center; gap:8px; margin:0 0 14px;
+  }
+  #view-avance .ca-card-title .ca-n{
+    font-family:'IBM Plex Mono',monospace; color:var(--ca-bg); background:var(--ca-amber);
+    font-size:11px; font-weight:700; width:20px;height:20px; border-radius:6px;
+    display:flex;align-items:center;justify-content:center; flex-shrink:0;
+  }
+  #view-avance label.ca-field{ display:block; margin-bottom:12px; }
+  #view-avance label.ca-field:last-child{ margin-bottom:0; }
+  #view-avance .ca-field-label{ display:block; font-size:12.5px; color:var(--ca-muted); margin-bottom:6px; }
+  #view-avance .ca-num{
+    width:100%; background:var(--ca-surface-2); border:1px solid var(--ca-line);
+    border-radius:10px; padding:12px 12px; color:var(--ca-text);
+    font-family:'IBM Plex Mono',monospace; font-size:17px; font-weight:600;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  #view-avance .ca-num::placeholder{ color:#5a656b; font-weight:500; }
+  #view-avance .ca-num:focus{
+    outline:none; border-color:var(--ca-amber); box-shadow:0 0 0 3px var(--ca-amber-dim);
+  }
+  #view-avance .ca-unit{ position:relative; }
+  #view-avance .ca-unit::after{
+    content: attr(data-unit); position:absolute; right:12px; top:50%; transform:translateY(-50%);
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ca-muted); pointer-events:none;
+  }
+  #view-avance .ca-helper{
+    margin:10px 2px 0; font-size:11.5px; color:var(--ca-steel);
+    font-family:'IBM Plex Mono',monospace;
+  }
+  #view-avance .ca-choice-row{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  #view-avance .ca-choice{
+    background:var(--ca-surface-2); border:1px solid var(--ca-line); border-radius:10px;
+    padding:12px 10px; text-align:center; cursor:pointer; color:var(--ca-text);
+    font-family:'IBM Plex Mono',monospace; transition:border-color .15s, background .15s, transform .1s;
+  }
+  #view-avance .ca-choice:active{ transform:scale(0.98); }
+  #view-avance .ca-choice .ca-big{ display:block; font-size:19px; font-weight:700; line-height:1.2;}
+  #view-avance .ca-choice .ca-lbl{ display:block; font-size:10.5px; color:var(--ca-muted); text-transform:uppercase; letter-spacing:.05em; margin-top:2px; font-family:'Inter',sans-serif;}
+  #view-avance .ca-choice[aria-pressed="true"]{ border-color:var(--ca-amber); background:var(--ca-amber-dim); }
+  #view-avance .ca-choice[aria-pressed="true"] .ca-big{ color:var(--ca-amber); }
+  #view-avance .ca-choice:focus-visible{ outline:2px solid var(--ca-steel); outline-offset:2px; }
+  #view-avance .ca-stack-visual{
+    margin-top:14px; display:flex; align-items:flex-end; gap:2px; height:64px; padding:0 2px;
+  }
+  #view-avance .ca-tray{ flex:1; background:var(--ca-line); border-radius:3px 3px 1px 1px; align-self:flex-end; transition:background .2s, height .2s; }
+  #view-avance .ca-tray.ca-filled{ background:linear-gradient(180deg, var(--ca-amber), #c98526); box-shadow:0 0 8px rgba(232,163,61,0.35); }
+  #view-avance .ca-stack-caption{ margin-top:8px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ca-muted); text-align:center; }
+  #view-avance .ca-results-card{
+    background:linear-gradient(180deg, var(--ca-surface-2), var(--ca-surface));
+    border:1px solid var(--ca-line); border-radius:16px; padding:18px 16px 16px;
+    box-shadow:0 10px 26px -14px rgba(0,0,0,0.6);
+  }
+  #view-avance .ca-results-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+  #view-avance .ca-result{ background:rgba(0,0,0,0.18); border:1px solid var(--ca-line); border-radius:10px; padding:12px 12px 10px; }
+  #view-avance .ca-result .ca-val{
+    font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:24px; color:var(--ca-amber);
+    line-height:1.1; text-shadow:0 0 18px rgba(232,163,61,0.25);
+  }
+  #view-avance .ca-result .ca-val .ca-approx{
+    display:block; font-size:11px; font-weight:500; color:var(--ca-muted); text-shadow:none; margin-top:3px;
+  }
+  #view-avance .ca-result .ca-lbl{ display:block; font-size:11px; color:var(--ca-muted); text-transform:uppercase; letter-spacing:.04em; margin-top:6px; }
+  #view-avance .ca-result.ca-wide{ grid-column:1/-1; }
+  #view-avance .ca-status-line{
+    display:flex; align-items:center; gap:6px; font-family:'IBM Plex Mono',monospace;
+    font-size:11px; color:var(--ca-muted); padding-bottom:14px;
+  }
+  #view-avance .ca-status-dot{ width:6px;height:6px;border-radius:50%; background:#4a5560; }
+  #view-avance .ca-status-dot.ca-ok{ background:#7fbf85; }
+  #view-avance .ca-copy-btn{
+    width:100%; background:var(--ca-amber); color:var(--ca-bg);
+    border:none; border-radius:10px; padding:12px 14px;
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13.5px;
+    cursor:pointer; margin-top:2px;
+  }
+  #view-avance .ca-copy-btn:active{ background:#c98526; }
+  #view-avance .ca-footer{ text-align:center; font-size:11px; color:#5a656b; margin-top:20px; font-family:'IBM Plex Mono',monospace; }
+
+  @media (prefers-reduced-motion: reduce){
+    #view-avance *{ transition:none !important; }
+  }
 </style>
 </head>
 <body>
 
-<header class="top">
-  <p class="eyebrow">Barranco Amarillo Procesadora</p>
-  <h1 class="title">Turno B · Proceso Australis</h1>
-  <div class="meta-grid">
-    <div class="meta-field">
-      <label>Fecha</label>
-      <input type="date" id="fFecha">
-    </div>
-    <div class="meta-field">
-      <label>Lote</label>
-      <input type="text" id="fLote" placeholder="S2026245">
-    </div>
-    <div class="meta-field" style="grid-column:1/3">
-      <label>Dotación</label>
-      <input type="number" id="fDotacion" placeholder="11">
-    </div>
-  </div>
-</header>
-
-<main>
-
-  <section class="card">
-    <div class="card-head">
-      <div>
-        <h2>Pedido fresco</h2>
-      </div>
-      <span class="num">7 slots</span>
-    </div>
-    <div id="frescoRows"></div>
-  </section>
-
-  <section class="card">
-    <div class="card-head">
-      <div>
-        <h2>Congelado IVP/IQF</h2>
-      </div>
-      <span class="num">7 slots</span>
-    </div>
-    <div id="congRows"></div>
-  </section>
-
-  <section class="card">
-    <div class="card-head">
-      <div><h2>Pendientes / en proceso</h2></div>
-      <span class="num" id="pendCount">0</span>
-    </div>
-    <div class="pendientes-list" id="pendList">
-      <p class="empty-note">Se llena automáticamente al marcar ❌ En proceso en Pedido fresco.</p>
-    </div>
-  </section>
-
-  <section class="card">
-    <div class="card-head">
-      <div><h2>Observación</h2></div>
-    </div>
-    <div id="obsRows"></div>
-    <span class="obs-free-label">Notas adicionales (opcional)</span>
-    <div class="obs-text">
-      <textarea id="obsFree" placeholder="Una línea por observación..."></textarea>
-    </div>
-  </section>
-
-</main>
-
-<div class="actions">
-  <button class="ghost" id="btnReset">Reiniciar</button>
-  <button class="primary" id="btnGen">Generar reporte</button>
+<!-- ============ HOME ============ -->
+<div id="view-home" class="view active">
+  <header class="top">
+    <p class="eyebrow">Barranco Amarillo Procesadora</p>
+    <h1 class="title">Turno B</h1>
+    <div class="sub-home">Elige una herramienta para continuar</div>
+  </header>
+  <main class="home-main">
+    <button class="nav-card" data-nav="view-reporte">
+      <span class="nav-card-icon">📋</span>
+      <span class="nav-card-text">
+        <span class="nav-card-title">Reporte Turno</span>
+        <span class="nav-card-desc">Pedido fresco, congelado, pendientes y observación</span>
+      </span>
+      <span class="nav-card-arrow">›</span>
+    </button>
+    <button class="nav-card dark" data-nav="view-avance">
+      <span class="nav-card-icon">📐</span>
+      <span class="nav-card-text">
+        <span class="nav-card-title">Control de Avance</span>
+        <span class="nav-card-desc">Kilos, piezas, bandejas y pilas restantes de un pedido</span>
+      </span>
+      <span class="nav-card-arrow">›</span>
+    </button>
+  </main>
 </div>
 
-<div class="sheet-backdrop" id="sheetBackdrop">
-  <div class="sheet">
-    <div class="sheet-head">
-      <h3>Reporte generado</h3>
-      <button class="close" id="btnClose">Cerrar</button>
+<!-- ============ REPORTE TURNO ============ -->
+<div id="view-reporte" class="view">
+  <div class="subnav">
+    <button class="back-btn" data-nav="view-home">← Inicio</button>
+  </div>
+  <header class="top">
+    <p class="eyebrow">Barranco Amarillo Procesadora</p>
+    <h1 class="title">Turno B · Proceso Australis</h1>
+    <div class="meta-grid">
+      <div class="meta-field">
+        <label>Fecha</label>
+        <input type="date" id="fFecha">
+      </div>
+      <div class="meta-field">
+        <label>Lote</label>
+        <input type="text" id="fLote" placeholder="S2026245">
+      </div>
+      <div class="meta-field" style="grid-column:1/3">
+        <label>Dotación</label>
+        <input type="number" id="fDotacion" placeholder="11">
+      </div>
     </div>
-    <pre id="reportOut"></pre>
-    <div class="actions">
-      <button class="ghost" id="btnCopy">Copiar reporte</button>
-      <button class="primary" id="btnWhatsapp">Enviar por WhatsApp</button>
+  </header>
+
+  <main>
+
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h2>Pedido fresco</h2>
+        </div>
+        <span class="num">7 slots</span>
+      </div>
+      <div id="frescoRows"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h2>Congelado IVP/IQF</h2>
+        </div>
+        <span class="num">7 slots</span>
+      </div>
+      <div id="congRows"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <div><h2>Pendientes / en proceso</h2></div>
+        <span class="num" id="pendCount">0</span>
+      </div>
+      <div class="pendientes-list" id="pendList">
+        <p class="empty-note">Se llena automáticamente al marcar ❌ En proceso en Pedido fresco.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <div><h2>Observación</h2></div>
+      </div>
+      <div id="obsRows"></div>
+      <span class="obs-free-label">Notas adicionales (opcional)</span>
+      <div class="obs-text">
+        <textarea id="obsFree" placeholder="Una línea por observación..."></textarea>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="actions">
+    <button class="ghost" id="btnReset">Reiniciar</button>
+    <button class="primary" id="btnGen">Generar reporte</button>
+  </div>
+
+  <div class="sheet-backdrop" id="sheetBackdrop">
+    <div class="sheet">
+      <div class="sheet-head">
+        <h3>Reporte generado</h3>
+        <button class="close" id="btnClose">Cerrar</button>
+      </div>
+      <pre id="reportOut"></pre>
+      <div class="actions">
+        <button class="ghost" id="btnCopy">Copiar reporte</button>
+        <button class="primary" id="btnWhatsapp">Enviar por WhatsApp</button>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast">Reporte copiado</div>
+<!-- ============ CONTROL DE AVANCE ============ -->
+<div id="view-avance" class="view">
+  <div class="subnav">
+    <button class="back-btn" data-nav="view-home">← Inicio</button>
+  </div>
+  <div class="ca-wrap">
+
+    <header class="ca-header">
+      <div class="ca-eyebrow">Piso de producción</div>
+      <h1>Control de avance</h1>
+      <div class="ca-sub">Kilos, piezas, bandejas y pilas — pedido a pedido.</div>
+    </header>
+
+    <section class="ca-card">
+      <p class="ca-card-title"><span class="ca-n">1</span> ⚖️ Pedido</p>
+      <label class="ca-field">
+        <span class="ca-field-label">Kilos del pedido</span>
+        <div class="ca-unit" data-unit="kg">
+          <input type="text" class="ca-num" id="kgPedido" inputmode="decimal" placeholder="0">
+        </div>
+      </label>
+      <label class="ca-field">
+        <span class="ca-field-label">Kilos del avance</span>
+        <div class="ca-unit" data-unit="kg">
+          <input type="text" class="ca-num" id="kgAvance" inputmode="decimal" placeholder="0">
+        </div>
+      </label>
+    </section>
+
+    <section class="ca-card">
+      <p class="ca-card-title"><span class="ca-n">2</span> 🗂️ Tipo de pila</p>
+      <div class="ca-choice-row" id="pilaChoice">
+        <div class="ca-choice" data-value="14" role="button" tabindex="0" aria-pressed="true">
+          <span class="ca-big">14</span>
+          <span class="ca-lbl">Bandejas</span>
+        </div>
+        <div class="ca-choice" data-value="21" role="button" tabindex="0" aria-pressed="false">
+          <span class="ca-big">21</span>
+          <span class="ca-lbl">Bandejas</span>
+        </div>
+      </div>
+      <div class="ca-stack-visual" id="stackVisual"></div>
+      <div class="ca-stack-caption" id="stackCaption">Pila de 14 bandejas</div>
+    </section>
+
+    <section class="ca-card">
+      <p class="ca-card-title"><span class="ca-n">3</span> 🍱 Piezas por bandeja</p>
+      <div class="ca-choice-row" id="piezasChoice">
+        <div class="ca-choice" data-value="3" role="button" tabindex="0" aria-pressed="true">
+          <span class="ca-big">3</span>
+          <span class="ca-lbl">Piezas</span>
+        </div>
+        <div class="ca-choice" data-value="2" role="button" tabindex="0" aria-pressed="false">
+          <span class="ca-big">2</span>
+          <span class="ca-lbl">Piezas</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="ca-card">
+      <p class="ca-card-title"><span class="ca-n">4</span> 🧮 Peso de la pila</p>
+      <label class="ca-field">
+        <span class="ca-field-label">Peso promedio de la pila, según el tipo elegido arriba</span>
+        <div class="ca-unit" data-unit="kg">
+          <input type="text" class="ca-num" id="pesoPila" inputmode="decimal" placeholder="0,00">
+        </div>
+      </label>
+      <p class="ca-helper" id="pesoPorPiezaHelper">Ingresa los datos para calcular el peso por pieza</p>
+    </section>
+
+    <section class="ca-results-card">
+      <p class="ca-card-title" style="margin-bottom:12px;">Información a entregar</p>
+      <div class="ca-results-grid">
+        <div class="ca-result">
+          <span class="ca-val" id="rKilos">0.0</span>
+          <span class="ca-lbl">Kilos restantes</span>
+        </div>
+        <div class="ca-result">
+          <span class="ca-val" id="rPiezas">0</span>
+          <span class="ca-lbl">Piezas restantes</span>
+        </div>
+        <div class="ca-result">
+          <span class="ca-val" id="rPilas">0<span class="ca-approx" id="rPilasApprox">≈ 0.0 exacto</span></span>
+          <span class="ca-lbl">Pilas restantes</span>
+        </div>
+        <div class="ca-result">
+          <span class="ca-val" id="rBandejas">0</span>
+          <span class="ca-lbl">Bandejas restantes</span>
+        </div>
+      </div>
+      <div class="ca-status-line">
+        <span class="ca-status-dot" id="statusDot"></span>
+        <span id="statusText">Ingresa los datos del pedido</span>
+      </div>
+      <button class="ca-copy-btn" id="btnCopyAvance">Copiar resultados</button>
+    </section>
+
+    <footer class="ca-footer">Redondeos hacia arriba — siempre se sugiere completar en piezas/bandejas/pilas enteras</footer>
+  </div>
+</div>
+
+<div class="toast" id="toast">Copiado</div>
 
 <script>
+/* ============ NAV ============ */
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1600);
+}
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('[data-nav]').forEach(el=>{
+  el.addEventListener('click', ()=> showView(el.dataset.nav));
+});
+
+/* ============ REPORTE TURNO ============ */
 const FRESCO_OPTS = [
   "T/F 2-6","T/F 2-6 BP",
   "T/D 2-3 C/N","T/D 3-4 C/N","T/D 4-5 C/N","T/D 2-4 C/N","T/D 2-5 C/N",
@@ -450,11 +770,10 @@ const congRowsEl = document.getElementById('congRows');
 for(let i=0;i<7;i++){ frescoRowsEl.insertAdjacentHTML('beforeend', buildFrescoRow(i)); }
 for(let i=0;i<7;i++){ congRowsEl.insertAdjacentHTML('beforeend', buildCongRow(i)); }
 
-// Observación rows
 const obsRowsEl = document.getElementById('obsRows');
 OBS_FIELDS.forEach(f=>{
   const inputType = f.type==="number" ? "number" : (f.type==="time" ? "time" : "text");
-  const val = f.type==="time" ? f.def : f.def;
+  const val = f.def;
   obsRowsEl.insertAdjacentHTML('beforeend', `
     <div class="obs-row">
       <label>${f.label}</label>
@@ -462,7 +781,6 @@ OBS_FIELDS.forEach(f=>{
     </div>`);
 });
 
-// status color + pendientes sync
 function refreshStatusColor(sel){
   sel.classList.remove('st-ok','st-warn','st-na');
   if(sel.value==='ok') sel.classList.add('st-ok');
@@ -573,11 +891,7 @@ document.getElementById('btnClose').addEventListener('click', ()=>{
 });
 document.getElementById('btnCopy').addEventListener('click', ()=>{
   const text = document.getElementById('reportOut').textContent;
-  navigator.clipboard.writeText(text).then(()=>{
-    const t = document.getElementById('toast');
-    t.classList.add('show');
-    setTimeout(()=>t.classList.remove('show'), 1600);
-  });
+  navigator.clipboard.writeText(text).then(()=> showToast('Reporte copiado'));
 });
 document.getElementById('btnWhatsapp').addEventListener('click', ()=>{
   const text = document.getElementById('reportOut').textContent;
@@ -590,13 +904,115 @@ document.getElementById('btnWhatsapp').addEventListener('click', ()=>{
 document.getElementById('btnReset').addEventListener('click', ()=>{
   if(confirm('¿Reiniciar todos los campos del reporte?')) location.reload();
 });
-
-// default date = today
 (function setToday(){
   const d = new Date();
   const iso = d.toISOString().slice(0,10);
   document.getElementById('fFecha').value = iso;
 })();
+
+/* ============ CONTROL DE AVANCE ============ */
+const caState = { pila: 14, piezasBandeja: 3 };
+
+function caSetupChoice(groupId, key){
+  const group = document.getElementById(groupId);
+  const opts = group.querySelectorAll('.ca-choice');
+  opts.forEach(opt => {
+    const activate = () => {
+      opts.forEach(o => o.setAttribute('aria-pressed','false'));
+      opt.setAttribute('aria-pressed','true');
+      caState[key] = Number(opt.dataset.value);
+      caCompute();
+    };
+    opt.addEventListener('click', activate);
+    opt.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); activate(); }});
+  });
+}
+caSetupChoice('pilaChoice','pila');
+caSetupChoice('piezasChoice','piezasBandeja');
+
+function caRenderStack(){
+  const el = document.getElementById('stackVisual');
+  const total = 21;
+  el.innerHTML = '';
+  for(let i=0; i<total; i++){
+    const bar = document.createElement('div');
+    bar.className = 'ca-tray' + (i < caState.pila ? ' ca-filled' : '');
+    bar.style.height = (18 + (i * (44/total))) + 'px';
+    el.appendChild(bar);
+  }
+  document.getElementById('stackCaption').textContent = `Pila de ${caState.pila} bandejas`;
+}
+
+const ca$ = id => document.getElementById(id);
+const caNum = v => { const n = parseFloat(String(v).replace(',', '.')); return isNaN(n) ? 0 : n; };
+const caFmt = (n, dec=1) => n.toLocaleString('es-ES', {minimumFractionDigits:dec, maximumFractionDigits:dec});
+
+let caLast = null;
+
+function caCompute(){
+  caRenderStack();
+
+  const kgPedido = caNum(ca$('kgPedido').value);
+  const kgAvance = caNum(ca$('kgAvance').value);
+  const pesoPila = caNum(ca$('pesoPila').value);
+  const bandejasPila = caState.pila;
+  const piezasBandeja = caState.piezasBandeja;
+
+  const diffKg = Math.max(kgPedido - kgAvance, 0);
+  const piezasPorPila = bandejasPila * piezasBandeja;
+  const pesoPorPieza = piezasPorPila > 0 ? pesoPila / piezasPorPila : 0;
+
+  const diffPiezas = pesoPorPieza > 0 ? Math.ceil(diffKg / pesoPorPieza) : 0;
+  const diffBandejas = piezasBandeja > 0 ? Math.ceil(diffPiezas / piezasBandeja) : 0;
+  const pilasExacto = pesoPila > 0 ? diffKg / pesoPila : 0;
+  const diffPilas = pesoPila > 0 ? Math.ceil(pilasExacto) : 0;
+
+  const helper = ca$('pesoPorPiezaHelper');
+  if(pesoPila > 0 && piezasPorPila > 0){
+    helper.textContent = `≈ ${pesoPorPieza.toLocaleString('es-ES',{minimumFractionDigits:3,maximumFractionDigits:3})} kg por pieza`;
+  } else {
+    helper.textContent = 'Ingresa los datos para calcular el peso por pieza';
+  }
+
+  ca$('rKilos').textContent = caFmt(diffKg, 1);
+  ca$('rPiezas').textContent = caFmt(diffPiezas, 0);
+  ca$('rBandejas').textContent = caFmt(diffBandejas, 0);
+  ca$('rPilas').childNodes[0].textContent = caFmt(diffPilas, 0);
+  ca$('rPilasApprox').textContent = `≈ ${caFmt(pilasExacto,1)} exacto`;
+
+  const dot = ca$('statusDot');
+  const status = ca$('statusText');
+  if(kgPedido <= 0){
+    dot.classList.remove('ca-ok'); status.textContent = 'Ingresa los datos del pedido';
+  } else if(pesoPila <= 0){
+    dot.classList.remove('ca-ok'); status.textContent = 'Falta el peso de la pila';
+  } else if(diffKg <= 0){
+    dot.classList.add('ca-ok'); status.textContent = 'Pedido completo';
+  } else {
+    dot.classList.add('ca-ok'); status.textContent = `Faltan ${caFmt(diffKg,1)} kg por completar`;
+  }
+
+  caLast = { kgPedido, kgAvance, diffKg, diffPiezas, diffPilas, pilasExacto, diffBandejas, bandejasPila, piezasBandeja };
+}
+
+['kgPedido','kgAvance','pesoPila'].forEach(id => {
+  ca$(id).addEventListener('input', caCompute);
+});
+
+document.getElementById('btnCopyAvance').addEventListener('click', ()=>{
+  if(!caLast) return;
+  const t = `Control de avance\n`
+    + `Pedido: ${caFmt(caLast.kgPedido,1)} kg — Avance: ${caFmt(caLast.kgAvance,1)} kg\n`
+    + `Pila: ${caLast.bandejasPila} bandejas x ${caLast.piezasBandeja} piezas\n\n`
+    + `Kilos restantes: ${caFmt(caLast.diffKg,1)} kg\n`
+    + `Piezas restantes: ${caFmt(caLast.diffPiezas,0)}\n`
+    + `Bandejas restantes: ${caFmt(caLast.diffBandejas,0)}\n`
+    + `Pilas restantes: ${caFmt(caLast.diffPilas,0)} (≈ ${caFmt(caLast.pilasExacto,1)} exacto)`;
+  navigator.clipboard.writeText(t).then(()=> showToast('Resultados copiados'));
+});
+
+caRenderStack();
+caCompute();
 </script>
 </body>
 </html>
