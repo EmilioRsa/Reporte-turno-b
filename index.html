@@ -248,6 +248,20 @@
   }
   .obs-row:last-child{border-bottom:none;}
   .obs-row label{font-size:12.5px;color:var(--ink-soft);}
+  .obs-row-compound{ grid-template-columns:1fr; align-items:start; gap:6px; }
+  .obs-row-compound label{ margin-bottom:2px; }
+  .obs-compound{
+    display:flex; flex-wrap:wrap; align-items:center; gap:2px;
+    font-size:12.5px; color:var(--ink); line-height:1.5;
+  }
+  .obs-compound-num{
+    width:52px; text-align:center;
+    font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:700;
+    color:var(--deep); background:var(--foam);
+    border:1px solid var(--line); border-radius:7px;
+    padding:4px 2px;
+  }
+  .obs-static{ color:var(--ink-soft); }
 
   .obs-text{
     margin:0;
@@ -340,6 +354,26 @@
     color:var(--ink);
   }
   .sheet .actions{position:static; padding:0; background:none;}
+  .photo-attach{ margin-bottom:14px; }
+  .photo-btn{
+    width:100%;
+    background:var(--foam); color:var(--tide);
+    border:1px dashed var(--line);
+    border-radius:11px; padding:12px 14px;
+    font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13.5px;
+    cursor:pointer;
+  }
+  .photo-preview{
+    position:relative; margin-top:10px;
+    border-radius:11px; overflow:hidden; border:1px solid var(--line);
+  }
+  .photo-preview img{ display:block; width:100%; max-height:220px; object-fit:cover; }
+  .photo-remove{
+    position:absolute; top:8px; right:8px;
+    width:28px; height:28px; padding:0; flex:none;
+    background:rgba(11,42,51,0.7); color:#fff;
+    border-radius:50%; font-size:14px; line-height:1;
+  }
   .toast{
     position:fixed; left:50%; bottom:24px; transform:translateX(-50%);
     background:var(--deep); color:var(--foam);
@@ -663,6 +697,14 @@
         <button class="close" id="btnClose">Cerrar</button>
       </div>
       <pre id="reportOut"></pre>
+      <div class="photo-attach" id="photoAttach">
+        <input type="file" id="photoInput" accept="image/*" capture="environment" hidden>
+        <button class="photo-btn" id="btnAttachPhoto">📎 Adjuntar foto (opcional)</button>
+        <div class="photo-preview" id="photoPreview" style="display:none;">
+          <img id="photoPreviewImg" alt="Foto adjunta">
+          <button class="photo-remove" id="btnRemovePhoto" aria-label="Quitar foto">✕</button>
+        </div>
+      </div>
       <div class="actions">
         <button class="ghost" id="btnCopy">Copiar reporte</button>
         <button class="primary" id="btnWhatsapp">Enviar por WhatsApp</button>
@@ -913,7 +955,7 @@ const FRESCO_OPTS = [
   "T/D 2-3 C/M","T/D 3-4 C/M","T/D 4-5 C/M","T/D 2-4 C/M","T/D 2-5 C/M"
 ];
 const CONG_OPTS = [
-  "Prem. T/D 2-3 3-4 4-5 IVP","Prem. T/D 2-3 3-4 IVP","Prem. T/D 3-4 4-5 IVP","Prem. T/D 2-3 IVP","Prem. T/D 3-4 IVP",
+  "Prem. T/D 2-3 3-4 4-5 IVP","Prem. T/D 2-3 3-4 IVP","Prem. T/D 3-4 4-5 IVP","Prem. T/D 2-3 IVP","Prem. T/D 3-4 IVP","Prem. T/D 4-5 IVP",
   "Prem. T/E SASHIMI IVP","Prem. T/E IVP","Prem. T/F IVP",
   "Ind A. T/D 2-3 3-4 IVP","Ind A. T/D 2-3 IVP","Ind A. T/D 3-4 IVP",
   "Ind A/B T/D IQF","Ind T/F IQF","Ind T/E IQF"
@@ -922,8 +964,16 @@ const OBS_FIELDS = [
   {key:"sellado", label:"Sellado finaliza", type:"time", def:"23:25", suffix:" Hrs"},
   {key:"film", label:"Saldo film", type:"text", def:"1 tapa 1 fondo"},
   {key:"camara0", label:"Cámara 0", type:"text", def:"N/A"},
-  {key:"pouchVac", label:"Pouch vacíos", type:"text", def:"60 correspondientes a cambios de rollo, ciclaje antes de comenzar y/o cambios de Trim"},
-  {key:"pouchAb", label:"Pouch abiertos", type:"text", def:"7 por sello contaminado y 2 por máquina"},
+  {key:"pouchVac", label:"Pouch vacíos", type:"compound", parts:[
+    {kind:"number", id:"qty", def:60, width:52},
+    {kind:"static", text:" correspondientes a cambios de rollo, ciclaje antes de comenzar y/o cambios de Trim"}
+  ]},
+  {key:"pouchAb", label:"Pouch abiertos", type:"compound", parts:[
+    {kind:"number", id:"q1", def:7, width:44},
+    {kind:"static", text:" por sello contaminado y "},
+    {kind:"number", id:"q2", def:2, width:44},
+    {kind:"static", text:" por máquina"}
+  ]},
   {key:"totalSellado", label:"Total sellado", type:"number", def:"3456"}
 ];
 
@@ -964,6 +1014,20 @@ for(let i=0;i<7;i++){ congRowsEl.insertAdjacentHTML('beforeend', buildCongRow(i)
 
 const obsRowsEl = document.getElementById('obsRows');
 OBS_FIELDS.forEach(f=>{
+  if(f.type === "compound"){
+    const inner = f.parts.map(p=>{
+      if(p.kind === "number"){
+        return `<input class="obs-compound-num" data-key="${f.key}" data-part="${p.id}" type="number" inputmode="numeric" value="${p.def}" style="width:${p.width}px">`;
+      }
+      return `<span class="obs-static">${p.text}</span>`;
+    }).join('');
+    obsRowsEl.insertAdjacentHTML('beforeend', `
+      <div class="obs-row obs-row-compound">
+        <label>${f.label}</label>
+        <div class="obs-compound">${inner}</div>
+      </div>`);
+    return;
+  }
   const inputType = f.type==="number" ? "number" : (f.type==="time" ? "time" : "text");
   const val = f.def;
   obsRowsEl.insertAdjacentHTML('beforeend', `
@@ -1024,6 +1088,16 @@ function collectCong(){
 }
 function collectObs(){
   return OBS_FIELDS.map(f=>{
+    if(f.type === "compound"){
+      const val = f.parts.map(p=>{
+        if(p.kind === "number"){
+          const inp = obsRowsEl.querySelector(`[data-key="${f.key}"][data-part="${p.id}"]`);
+          return inp ? inp.value : p.def;
+        }
+        return p.text;
+      }).join('');
+      return {label:f.label, value: val};
+    }
     const el = obsRowsEl.querySelector(`[data-key="${f.key}"]`);
     let val = el.value;
     if(f.type==='time' && val) val = val + (f.suffix||'');
@@ -1074,6 +1148,8 @@ function generateReport(){
   return out;
 }
 
+let attachedPhoto = null;
+
 document.getElementById('btnGen').addEventListener('click', ()=>{
   document.getElementById('reportOut').textContent = generateReport();
   document.getElementById('sheetBackdrop').classList.add('open');
@@ -1085,11 +1161,36 @@ document.getElementById('btnCopy').addEventListener('click', ()=>{
   const text = document.getElementById('reportOut').textContent;
   navigator.clipboard.writeText(text).then(()=> showToast('Reporte copiado'));
 });
+document.getElementById('btnAttachPhoto').addEventListener('click', ()=>{
+  document.getElementById('photoInput').click();
+});
+document.getElementById('photoInput').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  attachedPhoto = file;
+  const url = URL.createObjectURL(file);
+  document.getElementById('photoPreviewImg').src = url;
+  document.getElementById('photoPreview').style.display = 'block';
+  document.getElementById('btnAttachPhoto').textContent = '📎 Cambiar foto';
+});
+document.getElementById('btnRemovePhoto').addEventListener('click', ()=>{
+  attachedPhoto = null;
+  document.getElementById('photoInput').value = '';
+  document.getElementById('photoPreview').style.display = 'none';
+  document.getElementById('btnAttachPhoto').textContent = '📎 Adjuntar foto (opcional)';
+});
 document.getElementById('btnWhatsapp').addEventListener('click', ()=>{
   const text = document.getElementById('reportOut').textContent;
+
+  if(attachedPhoto && navigator.canShare && navigator.canShare({ files: [attachedPhoto] })){
+    navigator.share({ text, files: [attachedPhoto] }).catch(()=>{});
+    return;
+  }
   if(navigator.share){
+    if(attachedPhoto) showToast('Este dispositivo no permite adjuntar foto aquí — se envía solo el texto');
     navigator.share({ text }).catch(()=>{});
   } else {
+    if(attachedPhoto) showToast('Adjunta la foto manualmente en WhatsApp');
     window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
   }
 });
