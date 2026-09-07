@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>BA Procesadora — Turno B</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="apple-touch-icon" href="icon.png">
+<style>
+  :root{
+    --ink:#0B2A33;
+    --deep:#0E3B44;
+    --tide:#125866;
+    --foam:#EAF3F1;
+    --paper:#F6FAF9;
+    --salmon:#E2734A;
+    --salmon-dim:#F2C9B4;
+    --ok:#2E8B57;
+    --warn:#C8443C;
+    --line:#D3E2DF;
+    --ink-soft:#4C6B70;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- view switching ---------- */
+  .view{display:none;}
+  .view.active{display:block;padding-bottom:60px;}
+
+  /* ---------- shared subnav / back button ---------- */
+  .subnav{
+    max-width:640px;margin:0 auto;
+    padding:12px 16px 0;
+    background:var(--paper);
+  }
+  .back-btn{
+    background:none;border:none;
+    font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;
+    color:var(--tide);
+    padding:6px 2px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:4px;
+  }
+
+  /* ---------- home ---------- */
+  .home-main{max-width:640px;margin:0 auto;padding:18px 16px 24px;}
+  .sub-home{
+    color:var(--salmon-dim); font-size:13px; position:relative; z-index:1;
+  }
+  .nav-card{
+    width:100%;
+    display:flex;align-items:center;gap:14px;
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:16px;margin-bottom:14px;
+    font-family:'Inter',sans-serif;text-align:left;cursor:pointer;
+  }
+  .nav-card:active{transform:scale(0.98);}
+  .nav-card-icon{font-size:26px;flex-shrink:0;}
+  .nav-card-text{flex:1;display:flex;flex-direction:column;gap:2px;}
+  .nav-card-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;color:var(--deep);}
+  .nav-card-desc{font-size:12.5px;color:var(--ink-soft);}
+  .nav-card-arrow{font-size:22px;color:var(--salmon);flex-shrink:0;}
+  .nav-card.dark{background:#14181a;border-color:#303a40;}
+  .nav-card.dark .nav-card-title{color:#edeae2;}
+  .nav-card.dark .nav-card-desc{color:#8b98a0;}
+  .nav-card.dark .nav-card-arrow{color:#e8a33d;}
+
+  /* ---------- reporte turno ---------- */
+  header.top{
+    background:linear-gradient(180deg,var(--deep) 0%,var(--tide) 100%);
+    color:var(--foam);
+    padding:28px 20px 22px;
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute;
+    right:-40px; top:-40px;
+    width:160px; height:160px;
+    border:1px solid rgba(234,243,241,0.15);
+    border-radius:50%;
+  }
+  header.top::before{
+    content:"";
+    position:absolute;
+    right:10px; top:20px;
+    width:100px; height:100px;
+    border:1px solid rgba(234,243,241,0.12);
+    border-radius:50%;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--salmon-dim);
+    margin:0 0 6px;
+  }
+  h1.title{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:26px;
+    margin:0 0 18px;
+    letter-spacing:-.01em;
+  }
+  .meta-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    position:relative;
+    z-index:1;
+  }
+  .meta-field{
+    background:rgba(246,250,249,0.08);
+    border:1px solid rgba(234,243,241,0.25);
+    border-radius:10px;
+    padding:8px 10px;
+  }
+  .meta-field label{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--salmon-dim);
+    margin-bottom:3px;
+  }
+  .meta-field input{
+    width:100%;
+    background:transparent;
+    border:none;
+    color:var(--foam);
+    font-family:'Space Grotesk',sans-serif;
+    font-size:15px;
+    font-weight:600;
+    outline:none;
+  }
+  .meta-field input::placeholder{color:rgba(234,243,241,0.4);}
+
+  main{max-width:640px;margin:0 auto;padding:18px 16px 0;}
+
+  section.card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:14px;
+    margin-bottom:16px;
+    overflow:hidden;
+  }
+  .card-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    padding:14px 16px 10px;
+    border-bottom:1px solid var(--line);
+  }
+  .card-head .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    letter-spacing:.06em;
+  }
+  .card-head h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:16px;
+    margin:2px 0 0;
+    color:var(--deep);
+  }
+  .row{
+    display:grid;
+    grid-template-columns:1fr 96px;
+    gap:8px;
+    padding:10px 16px;
+    border-bottom:1px solid #EEF4F3;
+    align-items:center;
+  }
+  .row:last-child{border-bottom:none;}
+  .slot-idx{
+    grid-column:1/3;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    color:var(--ink-soft);
+    letter-spacing:.08em;
+    margin-bottom:-2px;
+  }
+  select, .txt-input{
+    font-family:'Inter',sans-serif;
+    font-size:13.5px;
+    padding:8px 9px;
+    border-radius:8px;
+    border:1px solid var(--line);
+    background:var(--foam);
+    color:var(--ink);
+    width:100%;
+    appearance:none;
+  }
+  select.status{
+    font-weight:600;
+    text-align:center;
+  }
+  select.status.st-ok{background:#E5F3EA;border-color:#BEE1CB;color:var(--ok);}
+  select.status.st-warn{background:#FBEAE8;border-color:#F1C3BE;color:var(--warn);}
+  select.status.st-na{background:#EFF1F1;border-color:var(--line);color:var(--ink-soft);}
+
+  .pendientes-list{padding:10px 16px 14px;}
+  .pend-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 0;
+    border-bottom:1px dashed var(--line);
+  }
+  .pend-item:last-child{border-bottom:none;}
+  .pend-item .dot{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--warn); flex-shrink:0;
+  }
+  .pend-item .pname{font-size:13.5px; flex:1;}
+  .pend-item input{
+    width:120px;
+    font-size:12.5px;
+    padding:6px 8px;
+    border-radius:7px;
+    border:1px solid var(--line);
+    background:var(--foam);
+  }
+  .empty-note{
+    padding:16px;
+    font-size:13px;
+    color:var(--ink-soft);
+    font-style:italic;
+  }
+
+  .obs-row{
+    display:grid;
+    grid-template-columns:120px 1fr;
+    gap:10px;
+    padding:9px 16px;
+    border-bottom:1px solid #EEF4F3;
+    align-items:center;
+  }
+  .obs-row:last-child{border-bottom:none;}
+  .obs-row label{font-size:12.5px;color:var(--ink-soft);}
+  .obs-row-compound{ grid-template-columns:1fr; align-items:start; gap:6px; }
+  .obs-row-compound label{ margin-bottom:2px; }
+  .obs-compound{
+    display:flex; flex-wrap:wrap; align-items:center; gap:2px;
+    font-size:12.5px; color:var(--ink); line-height:1.5;
+  }
+  .obs-compound-num{
+    width:52px; text-align:center;
+    font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:700;
+    color:var(--deep); background:var(--foam);
+    border:1px solid var(--line); border-radius:7px;
+    padding:4px 2px;
+  }
+  .obs-static{ color:var(--ink-soft); }
+
+  .obs-text{
+    margin:0;
+    padding:12px 16px;
+  }
+  textarea#obsFree{
+    width:100%;
+    min-height:64px;
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:9px;
+    background:var(--foam);
+    resize:vertical;
+  }
+  .obs-free-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--ink-soft);
+    display:block;
+    margin:0 16px 6px;
+  }
+
+  .actions{
+    position:sticky;
+    bottom:0;
+    background:linear-gradient(180deg, rgba(246,250,249,0) 0%, var(--paper) 30%);
+    padding:14px 16px 10px;
+    max-width:640px;
+    margin:0 auto;
+    display:flex;
+    gap:10px;
+  }
+  button{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    border:none;
+    border-radius:11px;
+    padding:13px 16px;
+    cursor:pointer;
+    flex:1;
+  }
+  button:focus-visible{outline:2px solid var(--tide); outline-offset:2px;}
+  button.primary{background:var(--salmon); color:#fff;}
+  button.primary:active{background:#CC5F38;}
+  button.ghost{background:#fff; color:var(--deep); border:1px solid var(--line);}
+
+  .sheet-backdrop{
+    position:fixed; inset:0;
+    background:rgba(11,42,51,0.5);
+    display:none;
+    align-items:flex-end;
+    z-index:20;
+  }
+  .sheet-backdrop.open{display:flex;}
+  .sheet{
+    background:#fff;
+    width:100%;
+    max-height:82vh;
+    border-radius:18px 18px 0 0;
+    padding:18px 16px 22px;
+    overflow-y:auto;
+  }
+  .sheet-head{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:10px;
+  }
+  .sheet-head h3{
+    font-family:'Space Grotesk',sans-serif;
+    margin:0; font-size:16px; color:var(--deep);
+  }
+  .sheet-head button.close{
+    background:var(--foam); color:var(--ink-soft);
+    border-radius:8px; padding:6px 10px; font-size:12px; flex:none;
+  }
+  pre#reportOut{
+    white-space:pre-wrap;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    line-height:1.55;
+    background:var(--foam);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px;
+    margin:0 0 14px;
+    color:var(--ink);
+  }
+  .sheet .actions{position:static; padding:0; background:none;}
+  .photo-attach{ margin-bottom:14px; }
+  .photo-btn{
+    width:100%;
+    background:var(--foam); color:var(--tide);
+    border:1px dashed var(--line);
+    border-radius:11px; padding:12px 14px;
+    font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13.5px;
+    cursor:pointer;
+  }
+  .photo-preview{
+    position:relative; margin-top:10px;
+    border-radius:11px; overflow:hidden; border:1px solid var(--line);
+  }
+  .photo-preview img{ display:block; width:100%; max-height:220px; object-fit:cover; }
+  .photo-remove{
+    position:absolute; top:8px; right:8px;
+    width:28px; height:28px; padding:0; flex:none;
+    background:rgba(11,42,51,0.7); color:#fff;
+    border-radius:50%; font-size:14px; line-height:1;
+  }
+  .toast{
+    position:fixed; left:50%; bottom:24px; transform:translateX(-50%);
+    background:var(--deep); color:var(--foam);
+    padding:9px 16px; border-radius:20px; font-size:13px;
+    opacity:0; pointer-events:none; transition:opacity .2s;
+    font-family:'Inter',sans-serif; z-index:30;
+  }
+  .toast.show{opacity:1;}
+
+  /* ================= CONTROL DE AVANCE (scoped) ================= */
+  #view-avance{
+    --ca-bg:#14181a;
+    --ca-surface:#1e262b;
+    --ca-surface-2:#242d33;
+    --ca-line:#303a40;
+    --ca-amber:#e8a33d;
+    --ca-amber-dim: rgba(232,163,61,0.16);
+    --ca-steel:#5b87a6;
+    --ca-text:#edeae2;
+    --ca-muted:#8b98a0;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(91,135,166,0.14), transparent 60%),
+      var(--ca-bg);
+    color:var(--ca-text);
+  }
+  #view-avance .subnav{ background:var(--ca-bg); max-width:480px; }
+  #view-avance .back-btn{ color:var(--ca-steel); }
+  #view-avance .ca-wrap{max-width:480px;margin:0 auto;padding:16px 14px 60px;}
+  #view-avance .ca-header{margin-bottom:22px;}
+  #view-avance .ca-eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--ca-steel);
+    display:flex; align-items:center; gap:8px; margin-bottom:8px;
+  }
+  #view-avance .ca-eyebrow::before{
+    content:""; width:7px;height:7px;border-radius:50%;
+    background:var(--ca-amber); box-shadow:0 0 0 3px var(--ca-amber-dim);
+  }
+  #view-avance h1{
+    font-family:'Space Grotesk', sans-serif; font-weight:700;
+    font-size:25px; line-height:1.15; margin:0 0 4px; letter-spacing:-0.01em;
+    color:var(--ca-text);
+  }
+  #view-avance .ca-sub{ color:var(--ca-muted); font-size:13.5px; }
+  #view-avance .ca-card{
+    background:var(--ca-surface); border:1px solid var(--ca-line);
+    border-radius:16px; padding:18px 16px; margin-bottom:14px;
+    box-shadow:0 8px 20px -12px rgba(0,0,0,0.5);
+  }
+  #view-avance .ca-card-title{
+    font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:13px;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--ca-text);
+    display:flex; align-items:center; gap:8px; margin:0 0 14px;
+  }
+  #view-avance .ca-card-title .ca-n{
+    font-family:'IBM Plex Mono',monospace; color:var(--ca-bg); background:var(--ca-amber);
+    font-size:11px; font-weight:700; width:20px;height:20px; border-radius:6px;
+    display:flex;align-items:center;justify-content:center; flex-shrink:0;
+  }
+  #view-avance label.ca-field{ display:block; margin-bottom:12px; }
+  #view-avance label.ca-field:last-child{ margin-bottom:0; }
+  #view-avance .ca-field-label{ display:block; font-size:12.5px; color:var(--ca-muted); margin-bottom:6px; }
+  #view-avance .ca-num{
+    width:100%; background:var(--ca-surface-2); border:1px solid var(--ca-line);
+    border-radius:10px; padding:12px 12px; color:var(--ca-text);
+    font-family:'IBM Plex Mono',monospace; font-size:17px; font-weight:600;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  #view-avance .ca-num::placeholder{ color:#5a656b; font-weight:500; }
+  #view-avance .ca-num:focus{
+    outline:none; border-color:var(--ca-amber); box-shadow:0 0 0 3px var(--ca-amber-dim);
+  }
+  #view-avance .ca-unit{ position:relative; }
+  #view-avance .ca-unit::after{
+    content: attr(data-unit); position:absolute; right:12px; top:50%; transform:translateY(-50%);
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ca-muted); pointer-events:none;
+  }
+  #view-avance .ca-helper{
+    margin:10px 2px 0; font-size:11.5px; color:var(--ca-steel);
+    font-family:'IBM Plex Mono',monospace;
+  }
+  #view-avance .ca-choice-row{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  #view-avance .ca-choice{
+    background:var(--ca-surface-2); border:1px solid var(--ca-line); border-radius:10px;
+    padding:12px 10px; text-align:center; cursor:pointer; color:var(--ca-text);
+    font-family:'IBM Plex Mono',monospace; transition:border-color .15s, background .15s, transform .1s;
+  }
+  #view-avance .ca-choice:active{ transform:scale(0.98); }
+  #view-avance .ca-choice .ca-big{ display:block; font-size:19px; font-weight:700; line-height:1.2;}
+  #view-avance .ca-choice .ca-lbl{ display:block; font-size:10.5px; color:var(--ca-muted); text-transform:uppercase; letter-spacing:.05em; margin-top:2px; font-family:'Inter',sans-serif;}
+  #view-avance .ca-choice[aria-pressed="true"]{ border-color:var(--ca-amber); background:var(--ca-amber-dim); }
+  #view-avance .ca-choice[aria-pressed="true"] .ca-big{ color:var(--ca-amber); }
+  #view-avance .ca-choice:focus-visible{ outline:2px solid var(--ca-steel); outline-offset:2px; }
+  #view-avance .ca-stack-visual{
+    margin-top:14px; display:flex; align-items:flex-end; gap:2px; height:64px; padding:0 2px;
+  }
+  #view-avance .ca-tray{ flex:1; background:var(--ca-line); border-radius:3px 3px 1px 1px; align-self:flex-end; transition:background .2s, height .2s; }
+  #view-avance .ca-tray.ca-filled{ background:linear-gradient(180deg, var(--ca-amber), #c98526); box-shadow:0 0 8px rgba(232,163,61,0.35); }
+  #view-avance .ca-stack-caption{ margin-top:8px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ca-muted); text-align:center; }
+  #view-avance .ca-results-card{
+    background:linear-gradient(180deg, var(--ca-surface-2), var(--ca-surface));
+    border:1px solid var(--ca-line); border-radius:16px; padding:18px 16px 16px;
+    box-shadow:0 10px 26px -14px rgba(0,0,0,0.6);
+  }
+  #view-avance .ca-results-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+  #view-avance .ca-result{ background:rgba(0,0,0,0.18); border:1px solid var(--ca-line); border-radius:10px; padding:12px 12px 10px; }
+  #view-avance .ca-result .ca-val{
+    font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:24px; color:var(--ca-amber);
+    line-height:1.1; text-shadow:0 0 18px rgba(232,163,61,0.25);
+  }
+  #view-avance .ca-result .ca-val .ca-approx{
+    display:block; font-size:11px; font-weight:500; color:var(--ca-muted); text-shadow:none; margin-top:3px;
+  }
+  #view-avance .ca-result .ca-lbl{ display:block; font-size:11px; color:var(--ca-muted); text-transform:uppercase; letter-spacing:.04em; margin-top:6px; }
+  #view-avance .ca-result.ca-wide{ grid-column:1/-1; }
+  #view-avance .ca-status-line{
+    display:flex; align-items:center; gap:6px; font-family:'IBM Plex Mono',monospace;
+    font-size:11px; color:var(--ca-muted); padding-bottom:14px;
+  }
+  #view-avance .ca-status-dot{ width:6px;height:6px;border-radius:50%; background:#4a5560; }
+  #view-avance .ca-status-dot.ca-ok{ background:#7fbf85; }
+  #view-avance .ca-copy-btn{
+    width:100%; background:var(--ca-amber); color:var(--ca-bg);
+    border:none; border-radius:10px; padding:12px 14px;
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13.5px;
+    cursor:pointer; margin-top:2px;
+  }
+  #view-avance .ca-copy-btn:active{ background:#c98526; }
+  #view-avance .ca-footer{ text-align:center; font-size:11px; color:#5a656b; margin-top:20px; font-family:'IBM Plex Mono',monospace; }
+
+  @media (prefers-reduced-motion: reduce){
+    #view-avance *{ transition:none !important; }
+  }
+
+  /* ================= SEPARACIÓN DE CALIBRES (scoped) ================= */
+  #view-calibres{
+    --bg:#F3F6F5;
+    --panel:#FFFFFF;
+    --ink:#152526;
+    --ink-soft:#5B6E70;
+    --line:#DCE4E3;
+    --teal:#0F454F;
+    --teal-deep:#0B333B;
+    --steel:#3A6B75;
+    --salmon:#E8785A;
+    --salmon-soft:#FCE3DA;
+    --ok:#3E8E6B;
+    --radius:14px;
+    background:var(--bg);
+    color:var(--ink);
+  }
+  #view-calibres h1, #view-calibres h2, #view-calibres h3{font-family:'Space Grotesk',sans-serif;margin:0;}
+  #view-calibres .mono{font-family:'IBM Plex Mono',monospace;}
+
+  #view-calibres .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px;}
+  #view-calibres .card h2{font-size:15px;color:var(--teal-deep);margin-bottom:2px;}
+  #view-calibres .card .sub{font-size:12.5px;color:var(--ink-soft);margin-bottom:12px;}
+
+  #view-calibres label{font-size:12px;color:var(--ink-soft);display:block;margin-bottom:4px;}
+  #view-calibres input[type=number]{width:100%;padding:9px 10px;border-radius:9px;border:1px solid var(--line);background:#FBFCFC;font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--ink);}
+  #view-calibres input[type=number]:focus{outline:2px solid var(--steel);outline-offset:1px;}
+
+  #view-calibres .conv-row{display:flex;gap:10px;align-items:flex-end;}
+  #view-calibres .conv-row > div{flex:1;}
+
+  #view-calibres .rend-grid{display:flex;gap:14px;margin-bottom:14px;}
+  #view-calibres .rend-grid > div{flex:1;}
+  #view-calibres .rend-note{font-size:12px;color:var(--ink-soft);margin-top:8px;}
+
+  #view-calibres .chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+  #view-calibres .chip{padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:#F0F4F3;font-size:13px;font-weight:600;color:var(--teal-deep);cursor:pointer;font-family:'IBM Plex Mono',monospace;}
+  #view-calibres .chip.active{background:var(--salmon);border-color:var(--salmon);color:#fff;}
+  #view-calibres .custom-fields{display:flex;gap:10px;}
+  #view-calibres .custom-fields > div{flex:1;}
+
+  #view-calibres .result-box{margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--salmon-soft);border:1px dashed var(--salmon);}
+  #view-calibres .result-box .big{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:700;color:var(--teal-deep);}
+  #view-calibres .result-box .small{font-size:12px;color:var(--ink-soft);margin-top:3px;}
+
+  #view-calibres .ruler-wrap{padding-top:6px;}
+  #view-calibres .ruler{position:relative;height:64px;margin:10px 4px 26px;}
+  #view-calibres .ruler .axis{position:absolute;left:0;right:0;top:34px;height:1px;background:var(--line);}
+  #view-calibres .ruler .tick{position:absolute;top:30px;width:1px;height:9px;background:var(--ink-soft);}
+  #view-calibres .ruler .tick-label{position:absolute;top:41px;font-size:10px;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;transform:translateX(-50%);}
+  #view-calibres .ruler .seg{position:absolute;top:14px;height:16px;border-radius:8px;background:var(--steel);opacity:.85;}
+  #view-calibres .ruler .seg.match{background:var(--salmon);}
+  #view-calibres .ruler .target{position:absolute;top:6px;height:32px;border-radius:9px;border:2px dashed var(--teal-deep);background:rgba(15,69,79,0.06);}
+  #view-calibres .legend{display:flex;gap:16px;font-size:11.5px;color:var(--ink-soft);margin-top:2px;}
+  #view-calibres .legend span{display:inline-flex;align-items:center;gap:5px;}
+  #view-calibres .legend .dot{width:9px;height:9px;border-radius:3px;display:inline-block;}
+
+  #view-calibres table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  #view-calibres th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--ink-soft);padding:6px 6px;border-bottom:1px solid var(--line);}
+  #view-calibres td{padding:6px 6px;border-bottom:1px solid #EEF2F1;vertical-align:middle;}
+  #view-calibres tr.match td{background:var(--salmon-soft);}
+  #view-calibres td input[type=number]{padding:6px 7px;font-size:12.5px;}
+  #view-calibres .kg{color:var(--ink-soft);font-size:11px;}
+  #view-calibres .badge{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:999px;background:#E3EFE9;color:var(--ok);font-family:'IBM Plex Mono',monospace;}
+  #view-calibres .badge.no{background:#F0F0F0;color:#9AA5A6;}
+  #view-calibres .rm-btn{border:none;background:none;color:#B9433B;font-size:16px;cursor:pointer;line-height:1;}
+  #view-calibres .add-row{margin-top:10px;width:100%;padding:10px;border-radius:9px;border:1px dashed var(--steel);background:none;color:var(--teal);font-weight:600;font-size:13px;cursor:pointer;}
+  #view-calibres .cal-footer{text-align:center;font-size:11px;color:var(--ink-soft);padding:20px;}
+</style>
+</head>
+<body>
+
+<!-- ============ HOME ============ -->
+<div id="view-home" class="view active">
+  <header class="top">
+    <p class="eyebrow">Barranco Amarillo Procesadora</p>
+    <h1 class="title">Turno B</h1>
+    <div class="sub-home">Elige una herramienta para continuar</div>
+  </header>
+  <main class="home-main">
+    <button class="nav-card" data-nav="view-reporte">
+      <span class="nav-card-icon">📋</span>
+      <span class="nav-card-text">
+        <span class="nav-card-title">Reporte Turno</span>
+        <span class="nav-card-desc">Pedido fresco, congelado, pendientes y observación</span>
+      </span>
+      <span class="nav-card-arrow">›</span>
+    </button>
+    <button class="nav-card dark" data-nav="view-avance">
+      <span class="nav-card-icon">📐</span>
+      <span class="nav-card-text">
+        <span class="nav-card-title">Control de Avance</span>
+        <span class="nav-card-desc">Kilos, piezas, bandejas y pilas restantes de un pedido</span>
+      </span>
+      <span class="nav-card-arrow">›</span>
+    </button>
+    <button class="nav-card" data-nav="view-calibres">
+      <span class="nav-card-icon">🐟</span>
+      <span class="nav-card-text">
+        <span class="nav-card-title">Separación de Calibres</span>
+        <span class="nav-card-desc">Convierte lb ⇄ kg y calcula el calibre de pieza entera para tu pedido</span>
+      </span>
+      <span class="nav-card-arrow">›</span>
+    </button>
+  </main>
+</div>
+
+<!-- ============ REPORTE TURNO ============ -->
+<div id="view-reporte" class="view">
+  <div class="subnav">
+    <button class="back-btn" data-nav="view-home">← Inicio</button>
+  </div>
+  <header class="top">
+    <p class="eyebrow">Barranco Amarillo Procesadora</p>
+    <h1 class="title">Turno B · Proceso Australis</h1>
+    <div class="meta-grid">
+      <div class="meta-field">
+        <label>Fecha</label>
+        <input type="date" id="fFecha">
+      </div>
+      <div class="meta-field">
+        <label>Lote</label>
+        <input type="text" id="fLote" placeholder="S2026245">
+      </div>
+      <div class="meta-field" style="grid-column:1/3">
+        <label>Dotación</label>
+        <input type="number" id="fDotacion" placeholder="11">
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h2>Pedido fresco</h2>
+        </div>
+        <span class="num">7 slots</span>
+      </div>
+      <div id="frescoRows"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h2>Congelado IVP/IQF</h2>
+        </div>
+        <span class="num">7 slots</span>
+      </div>
+      <div id="congRows"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <div><h2>Pendientes / en proceso</h2></div>
+        <span class="num" id="pendCount">0</span>
+      </div>
+      <div class="pendientes-list" id="pendList">
+        <p class="empty-note">Se llena automáticamente al marcar ❌ En proceso en Pedido fresco.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <div><h2>Observación</h2></div>
+      </div>
+      <div id="obsRows"></div>
+      <span class="obs-free-label">Notas adicionales (opcional)</span>
+      <div class="obs-text">
+        <textarea id="obsFree" placeholder="Una línea por observación..."></textarea>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="actions">
+    <button class="ghost" id="btnReset">Reiniciar</button>
+    <button class="primary" id="btnGen">Generar reporte</button>
+  </div>
+
+  <div class="sheet-backdrop" id="sheetBackdrop">
+    <div class="sheet">
+      <div class="sheet-head">
+        <h3>Reporte generado</h3>
+        <button class="close" id="btnClose">Cerrar</button>
+      </div>
+      <pre id="reportOut"></pre>
+      <div class="photo-attach" id="photoAttach">
+        <input type="file" id="photoInput" accept="image/*" capture="environment" hidden>
+        <button class="photo-btn" id="btnAttachPhoto">📎 Adjuntar foto (opcional)</button>
+        <div class="photo-preview" id="photoPreview" style="display:none;">
+          <img id="photoPreviewImg" alt="Foto adjunta">
+          <button class="photo-remove" id="btnRemovePhoto" aria-label="Quitar foto">✕</button>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="ghost" id="btnCopy">Copiar reporte</button>
+        <button class="primary" id="btnWhatsapp">Enviar por WhatsApp</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CONTROL DE AVANCE ============ -->
+<div id="view-avance" class="view">
+  <div class="subnav">
+    <button class="back-btn" data-nav="view-home">← Inicio</button>
+  </div>
+  <div class="ca-wrap">
+
+    <header class="ca-header">
+      <div class="ca-eyebrow">Piso de producción</div>
+      <h1>Control de avance</h1>
+      <div class="ca-sub">Kilos, piezas, bandejas y pilas — pedido a pedido.</div>
+    </header>
+
+    <section class="ca-card">
+      <p class="ca-card-title"><span class="ca-n">1</span> ⚖️ Pedido</p>
+      <label class="ca-field">
+        <span class="ca-field-label">Kilos del pedido</span>
+        <div class="ca-unit" data-unit="kg">
+          <input type="text" class="ca-num" id="kgPedido" inputmode="decimal" placeholder="0">
+        </div>
+      </label>
+      <label class="ca-field">
+        <span class="ca-field-label">Kilos del avance</span>
+        <div class="ca-unit" data-unit="kg">
+          <input type="text" class="ca-num" id="kgAvance" inputmode="decimal" placeholder="0">
+        </div>
+      </label>
+    </section>
+
+    <section class="ca-card">
+      <p class="ca-card-title"><span class="ca-n">2</span> 🗂️ Tipo de pila</p>
+      <div class="ca-choice-row" id="pilaChoice">
+        <div class="ca-choice" data-value="14" role="button" tabindex="0" aria-pressed="true">
+          <span class="ca-big">14</span>
+          <span class="ca-lbl">Bandejas</span>
+        </div>
+        <div class="ca-choice" data-value="21" role="button" tabindex="0" aria-pressed="false">
+          <span class="ca-big">21</span>
+          <span class="ca-lbl">Bandejas</span>
+        </div>
+      </div>
+      <div class="ca-stack-visual" id="stackVisual"></div>
+      <div class="ca-stack-caption" id="stackCaption">Pila de 14 bandejas</div>
+    </section>
+
+    <section class="ca-card">
+      <p class="ca-card-title"><span class="ca-n">3</span> 🍱 Piezas por bandeja</p>
+      <div class="ca-choice-row" id="piezasChoice">
+        <div class="ca-choice" data-value="3" role="button" tabindex="0" aria-pressed="true">
+          <span class="ca-big">3</span>
+          <span class="ca-lbl">Piezas</span>
+        </div>
+        <div class="ca-choice" data-value="2" role="button" tabindex="0" aria-pressed="false">
+          <span class="ca-big">2</span>
+          <span class="ca-lbl">Piezas</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="ca-card">
+      <p class="ca-card-title"><span class="ca-n">4</span> 🧮 Peso de la pila</p>
+      <label class="ca-field">
+        <span class="ca-field-label">Peso promedio de la pila, según el tipo elegido arriba</span>
+        <div class="ca-unit" data-unit="kg">
+          <input type="text" class="ca-num" id="pesoPila" inputmode="decimal" placeholder="0,00">
+        </div>
+      </label>
+      <p class="ca-helper" id="pesoPorPiezaHelper">Ingresa los datos para calcular el peso por pieza</p>
+    </section>
+
+    <section class="ca-results-card">
+      <p class="ca-card-title" style="margin-bottom:12px;">Información a entregar</p>
+      <div class="ca-results-grid">
+        <div class="ca-result">
+          <span class="ca-val" id="rKilos">0.0</span>
+          <span class="ca-lbl">Kilos restantes</span>
+        </div>
+        <div class="ca-result">
+          <span class="ca-val" id="rPiezas">0</span>
+          <span class="ca-lbl">Piezas restantes</span>
+        </div>
+        <div class="ca-result">
+          <span class="ca-val" id="rPilas">0<span class="ca-approx" id="rPilasApprox">≈ 0.0 exacto</span></span>
+          <span class="ca-lbl">Pilas restantes</span>
+        </div>
+        <div class="ca-result">
+          <span class="ca-val" id="rBandejas">0</span>
+          <span class="ca-lbl">Bandejas restantes</span>
+        </div>
+      </div>
+      <div class="ca-status-line">
+        <span class="ca-status-dot" id="statusDot"></span>
+        <span id="statusText">Ingresa los datos del pedido</span>
+      </div>
+      <button class="ca-copy-btn" id="btnCopyAvance">Copiar resultados</button>
+    </section>
+
+    <footer class="ca-footer">Redondeos hacia arriba — siempre se sugiere completar en piezas/bandejas/pilas enteras</footer>
+  </div>
+</div>
+
+<!-- ============ SEPARACIÓN DE CALIBRES ============ -->
+<div id="view-calibres" class="view">
+  <div class="subnav">
+    <button class="back-btn" data-nav="view-home">← Inicio</button>
+  </div>
+  <header class="top">
+    <p class="eyebrow">Proceso Australis — control de calibre</p>
+    <h1 class="title">Separación de Calibres</h1>
+    <div class="sub-home">Convierte el peso de la pieza entera (lb ⇄ kg) y calcula qué calibre de container entrega el filete que pide tu pedido.</div>
+  </header>
+
+  <main>
+
+    <div class="card">
+      <h2>Conversor rápido</h2>
+      <div class="sub">Rango de peso de la pieza entera — ej. 8 a 10 lb. Deja mín. = máx. para un solo peso.</div>
+      <label style="margin-top:2px;">Mínimo</label>
+      <div class="conv-row">
+        <div>
+          <label for="calLbMinInput">Libras (lb)</label>
+          <input type="number" id="calLbMinInput" step="0.01" placeholder="0.00">
+        </div>
+        <div>
+          <label for="calKgMinInput">Kilos (kg)</label>
+          <input type="number" id="calKgMinInput" step="0.01" placeholder="0.00">
+        </div>
+      </div>
+      <label style="margin-top:10px;">Máximo</label>
+      <div class="conv-row">
+        <div>
+          <label for="calLbMaxInput">Libras (lb)</label>
+          <input type="number" id="calLbMaxInput" step="0.01" placeholder="0.00">
+        </div>
+        <div>
+          <label for="calKgMaxInput">Kilos (kg)</label>
+          <input type="number" id="calKgMaxInput" step="0.01" placeholder="0.00">
+        </div>
+      </div>
+      <button class="add-row" id="calAddRangeToTableBtn" style="margin-top:12px;">+ Agregar este rango a la tabla de calibres</button>
+    </div>
+
+    <div class="card">
+      <h2>Rendimiento de filete</h2>
+      <div class="sub">% del peso de la pieza entera que rinde <b>un</b> filete, por variante de corte</div>
+      <div class="rend-grid">
+        <div>
+          <label for="calRendCN">C/N — % por filete</label>
+          <input type="number" id="calRendCN" min="1" max="99" step="0.5" value="33">
+        </div>
+        <div>
+          <label for="calRendCM">C/M — % por filete</label>
+          <input type="number" id="calRendCM" min="1" max="99" step="0.5" value="33">
+        </div>
+      </div>
+      <label>Variante activa para los cálculos</label>
+      <div class="chip-row" id="calVariantRow" style="margin-bottom:0;"></div>
+      <div class="rend-note">Ajusta cada rendimiento según tu estándar real de planta. La variante activa define qué % se usa en la tabla, la regla y el buscador inverso.</div>
+    </div>
+
+    <div class="card">
+      <h2>Pedido objetivo</h2>
+      <div class="sub">Peso de filete que necesitas entregar</div>
+      <div class="chip-row" id="calChipRow"></div>
+      <div class="custom-fields" id="calCustomFields" style="display:none;">
+        <div>
+          <label for="calCustomMin">Mín. filete (lb)</label>
+          <input type="number" id="calCustomMin" step="0.1" value="2">
+        </div>
+        <div>
+          <label for="calCustomMax">Máx. filete (lb)</label>
+          <input type="number" id="calCustomMax" step="0.1" value="3">
+        </div>
+      </div>
+      <div class="result-box">
+        <div class="big" id="calResultBig">—</div>
+        <div class="small" id="calResultSmall">Selecciona un pedido para ver el calibre de pieza entera que necesitas.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Regla de calibres</h2>
+      <div class="sub">Cada barra es un calibre de pieza entera (lb). En naranjo, los que calzan con tu pedido.</div>
+      <div class="ruler-wrap">
+        <div class="ruler" id="calRuler"></div>
+      </div>
+      <div class="legend">
+        <span><span class="dot" style="background:var(--steel)"></span>Calibre</span>
+        <span><span class="dot" style="background:var(--salmon)"></span>Coincide con pedido</span>
+        <span><span class="dot" style="background:transparent;border:2px dashed var(--teal-deep)"></span>Rango ideal calculado</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Tabla de calibres</h2>
+      <div class="sub">Edita los rangos según lo que llegue en el container. Se guarda automáticamente en este dispositivo.</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Calibre (lb)</th>
+            <th>Calibre (kg)</th>
+            <th>Filete (lb)</th>
+            <th>Pedido</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="calTableBody"></tbody>
+      </table>
+      <button class="add-row" id="calAddRowBtn">+ Agregar rango de calibre</button>
+    </div>
+
+  </main>
+
+  <footer class="cal-footer">Los datos de calibres y rendimiento quedan guardados solo en este dispositivo/navegador.</footer>
+</div>
+
+<div class="toast" id="toast">Copiado</div>
+
+<script>
+/* ============ NAV ============ */
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1600);
+}
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('[data-nav]').forEach(el=>{
+  el.addEventListener('click', ()=> showView(el.dataset.nav));
+});
+
+/* ============ REPORTE TURNO ============ */
+const FRESCO_OPTS = [
+  "T/F 2-6","T/F 2-6 BP",
+  "T/D 2-3 C/N","T/D 3-4 C/N","T/D 4-5 C/N","T/D 2-4 C/N","T/D 2-5 C/N",
+  "T/D 2-3 C/M","T/D 3-4 C/M","T/D 4-5 C/M","T/D 2-4 C/M","T/D 2-5 C/M"
+];
+const CONG_OPTS = [
+  "Prem. T/D 2-3 3-4 4-5 IVP","Prem. T/D 2-3 3-4 IVP","Prem. T/D 3-4 4-5 IVP","Prem. T/D 2-3 IVP","Prem. T/D 3-4 IVP","Prem. T/D 4-5 IVP",
+  "Prem. T/E SASHIMI IVP","Prem. T/E IVP","Prem. T/F IVP",
+  "Ind A. T/D 2-3 3-4 IVP","Ind A. T/D 2-3 IVP","Ind A. T/D 3-4 IVP",
+  "Ind A/B T/D IQF","Ind T/F IQF","Ind T/E IQF"
+];
+const OBS_FIELDS = [
+  {key:"sellado", label:"Sellado finaliza", type:"time", def:"23:25", suffix:" Hrs"},
+  {key:"film", label:"Saldo film", type:"text", def:"1 tapa 1 fondo"},
+  {key:"camara0", label:"Cámara 0", type:"text", def:"N/A"},
+  {key:"pouchVac", label:"Pouch vacíos", type:"compound", parts:[
+    {kind:"number", id:"qty", def:60, width:52},
+    {kind:"static", text:" correspondientes a cambios de rollo, ciclaje antes de comenzar y/o cambios de Trim"}
+  ]},
+  {key:"pouchAb", label:"Pouch abiertos", type:"compound", parts:[
+    {kind:"number", id:"q1", def:7, width:44},
+    {kind:"static", text:" por sello contaminado y "},
+    {kind:"number", id:"q2", def:2, width:44},
+    {kind:"static", text:" por máquina"}
+  ]},
+  {key:"totalSellado", label:"Total sellado", type:"number", def:"3456"}
+];
+
+function buildOptions(list, includeBlank){
+  let html = includeBlank ? '<option value="">— seleccionar —</option>' : '';
+  list.forEach(o=> html += `<option value="${o}">${o}</option>`);
+  return html;
+}
+
+function buildFrescoRow(i){
+  return `
+  <div class="row" data-slot="${i}">
+    <div class="slot-idx">SLOT ${i+1}</div>
+    <select class="fresco-item">${buildOptions(FRESCO_OPTS,true)}</select>
+    <select class="fresco-status status st-na">
+      <option value="na" selected>N/A</option>
+      <option value="ok">✅ Completado</option>
+      <option value="warn">❌ En proceso</option>
+    </select>
+  </div>`;
+}
+function buildCongRow(i){
+  return `
+  <div class="row" data-slot="${i}">
+    <div class="slot-idx">SLOT ${i+1}</div>
+    <select class="cong-item">${buildOptions(CONG_OPTS,true)}</select>
+    <select class="cong-status status st-na">
+      <option value="na" selected>N/A</option>
+      <option value="ok">✅ Completado</option>
+    </select>
+  </div>`;
+}
+
+const frescoRowsEl = document.getElementById('frescoRows');
+const congRowsEl = document.getElementById('congRows');
+for(let i=0;i<7;i++){ frescoRowsEl.insertAdjacentHTML('beforeend', buildFrescoRow(i)); }
+for(let i=0;i<7;i++){ congRowsEl.insertAdjacentHTML('beforeend', buildCongRow(i)); }
+
+const obsRowsEl = document.getElementById('obsRows');
+OBS_FIELDS.forEach(f=>{
+  if(f.type === "compound"){
+    const inner = f.parts.map(p=>{
+      if(p.kind === "number"){
+        return `<input class="obs-compound-num" data-key="${f.key}" data-part="${p.id}" type="number" inputmode="numeric" value="${p.def}" style="width:${p.width}px">`;
+      }
+      return `<span class="obs-static">${p.text}</span>`;
+    }).join('');
+    obsRowsEl.insertAdjacentHTML('beforeend', `
+      <div class="obs-row obs-row-compound">
+        <label>${f.label}</label>
+        <div class="obs-compound">${inner}</div>
+      </div>`);
+    return;
+  }
+  const inputType = f.type==="number" ? "number" : (f.type==="time" ? "time" : "text");
+  const val = f.def;
+  obsRowsEl.insertAdjacentHTML('beforeend', `
+    <div class="obs-row">
+      <label>${f.label}</label>
+      <input class="txt-input obs-field" data-key="${f.key}" data-suffix="${f.suffix||''}" type="${inputType}" value="${val}">
+    </div>`);
+});
+
+function refreshStatusColor(sel){
+  sel.classList.remove('st-ok','st-warn','st-na');
+  if(sel.value==='ok') sel.classList.add('st-ok');
+  else if(sel.value==='warn') sel.classList.add('st-warn');
+  else sel.classList.add('st-na');
+}
+document.querySelectorAll('.status').forEach(sel=>{
+  refreshStatusColor(sel);
+  sel.addEventListener('change', ()=>{ refreshStatusColor(sel); renderPendientes(); });
+});
+document.querySelectorAll('.fresco-item, .cong-item').forEach(sel=>{
+  sel.addEventListener('change', renderPendientes);
+});
+
+function renderPendientes(){
+  const pendList = document.getElementById('pendList');
+  const rows = frescoRowsEl.querySelectorAll('.row');
+  const pendItems = [];
+  rows.forEach(row=>{
+    const item = row.querySelector('.fresco-item').value;
+    const status = row.querySelector('.fresco-status').value;
+    if(status==='warn' && item) pendItems.push(item);
+  });
+  document.getElementById('pendCount').textContent = pendItems.length;
+  if(pendItems.length===0){
+    pendList.innerHTML = '<p class="empty-note">Se llena automáticamente al marcar ❌ En proceso en Pedido fresco.</p>';
+    return;
+  }
+  pendList.innerHTML = pendItems.map((name,idx)=>`
+    <div class="pend-item">
+      <span class="dot"></span>
+      <span class="pname">${name}</span>
+      <input type="text" placeholder="Responsable" data-pend="${idx}">
+    </div>`).join('');
+}
+renderPendientes();
+
+function collectFresco(){
+  return Array.from(frescoRowsEl.querySelectorAll('.row')).map(row=>({
+    item: row.querySelector('.fresco-item').value,
+    status: row.querySelector('.fresco-status').value
+  })).filter(r=>r.item);
+}
+function collectCong(){
+  return Array.from(congRowsEl.querySelectorAll('.row')).map(row=>({
+    item: row.querySelector('.cong-item').value,
+    status: row.querySelector('.cong-status').value
+  })).filter(r=>r.item);
+}
+function collectObs(){
+  return OBS_FIELDS.map(f=>{
+    if(f.type === "compound"){
+      const val = f.parts.map(p=>{
+        if(p.kind === "number"){
+          const inp = obsRowsEl.querySelector(`[data-key="${f.key}"][data-part="${p.id}"]`);
+          return inp ? inp.value : p.def;
+        }
+        return p.text;
+      }).join('');
+      return {label:f.label, value: val};
+    }
+    const el = obsRowsEl.querySelector(`[data-key="${f.key}"]`);
+    let val = el.value;
+    if(f.type==='time' && val) val = val + (f.suffix||'');
+    return {label:f.label, value: val};
+  }).filter(o=>o.value);
+}
+
+function generateReport(){
+  const fecha = document.getElementById('fFecha').value || '—';
+  const lote = document.getElementById('fLote').value || '—';
+  const dotacion = document.getElementById('fDotacion').value || '—';
+
+  let out = `TURNO B — Proceso: Australis\n`;
+  out += `Fecha: ${fecha}\n`;
+  out += `Lote: ${lote}\n`;
+  out += `Dotación: ${dotacion}\n\n`;
+
+  out += `Pedido fresco:\n`;
+  const fresco = collectFresco().filter(r=>r.status==='ok');
+  if(fresco.length===0) out += `(sin ítems completados)\n`;
+  fresco.forEach(r=> out += `• ${r.item} ✅ Completado\n`);
+
+  out += `\nCongelado IVP/IQF:\n`;
+  const cong = collectCong().filter(r=>r.status==='ok');
+  if(cong.length===0) out += `(sin ítems completados)\n`;
+  cong.forEach(r=> out += `• ${r.item}\n`);
+
+  out += `\nPendientes/en proceso:\n`;
+  const pendEls = document.querySelectorAll('#pendList .pend-item');
+  if(pendEls.length===0){
+    out += `(sin pendientes)\n`;
+  } else {
+    pendEls.forEach(el=>{
+      const name = el.querySelector('.pname').textContent;
+      const resp = el.querySelector('input').value.trim();
+      out += resp ? `• ${name} — ${resp}\n` : `• ${name}\n`;
+    });
+  }
+
+  out += `\nObservación:\n`;
+  const obs = collectObs();
+  obs.forEach(o=> out += `• ${o.label}: ${o.value}\n`);
+  const free = document.getElementById('obsFree').value.trim();
+  if(free){
+    free.split('\n').filter(l=>l.trim()).forEach(l=> out += `• ${l.trim()}\n`);
+  }
+
+  return out;
+}
+
+let attachedPhoto = null;
+
+document.getElementById('btnGen').addEventListener('click', ()=>{
+  document.getElementById('reportOut').textContent = generateReport();
+  document.getElementById('sheetBackdrop').classList.add('open');
+});
+document.getElementById('btnClose').addEventListener('click', ()=>{
+  document.getElementById('sheetBackdrop').classList.remove('open');
+});
+document.getElementById('btnCopy').addEventListener('click', ()=>{
+  const text = document.getElementById('reportOut').textContent;
+  navigator.clipboard.writeText(text).then(()=> showToast('Reporte copiado'));
+});
+document.getElementById('btnAttachPhoto').addEventListener('click', ()=>{
+  document.getElementById('photoInput').click();
+});
+document.getElementById('photoInput').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  attachedPhoto = file;
+  const url = URL.createObjectURL(file);
+  document.getElementById('photoPreviewImg').src = url;
+  document.getElementById('photoPreview').style.display = 'block';
+  document.getElementById('btnAttachPhoto').textContent = '📎 Cambiar foto';
+});
+document.getElementById('btnRemovePhoto').addEventListener('click', ()=>{
+  attachedPhoto = null;
+  document.getElementById('photoInput').value = '';
+  document.getElementById('photoPreview').style.display = 'none';
+  document.getElementById('btnAttachPhoto').textContent = '📎 Adjuntar foto (opcional)';
+});
+document.getElementById('btnWhatsapp').addEventListener('click', ()=>{
+  const text = document.getElementById('reportOut').textContent;
+
+  if(attachedPhoto && navigator.canShare && navigator.canShare({ files: [attachedPhoto] })){
+    navigator.share({ text, files: [attachedPhoto] }).catch(()=>{});
+    return;
+  }
+  if(navigator.share){
+    if(attachedPhoto) showToast('Este dispositivo no permite adjuntar foto aquí — se envía solo el texto');
+    navigator.share({ text }).catch(()=>{});
+  } else {
+    if(attachedPhoto) showToast('Adjunta la foto manualmente en WhatsApp');
+    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+  }
+});
+document.getElementById('btnReset').addEventListener('click', ()=>{
+  if(confirm('¿Reiniciar todos los campos del reporte?')) location.reload();
+});
+(function setToday(){
+  const d = new Date();
+  const iso = d.toISOString().slice(0,10);
+  document.getElementById('fFecha').value = iso;
+})();
+
+/* ============ CONTROL DE AVANCE ============ */
+const caState = { pila: 14, piezasBandeja: 3 };
+
+function caSetupChoice(groupId, key){
+  const group = document.getElementById(groupId);
+  const opts = group.querySelectorAll('.ca-choice');
+  opts.forEach(opt => {
+    const activate = () => {
+      opts.forEach(o => o.setAttribute('aria-pressed','false'));
+      opt.setAttribute('aria-pressed','true');
+      caState[key] = Number(opt.dataset.value);
+      caCompute();
+    };
+    opt.addEventListener('click', activate);
+    opt.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); activate(); }});
+  });
+}
+caSetupChoice('pilaChoice','pila');
+caSetupChoice('piezasChoice','piezasBandeja');
+
+function caRenderStack(){
+  const el = document.getElementById('stackVisual');
+  const total = 21;
+  el.innerHTML = '';
+  for(let i=0; i<total; i++){
+    const bar = document.createElement('div');
+    bar.className = 'ca-tray' + (i < caState.pila ? ' ca-filled' : '');
+    bar.style.height = (18 + (i * (44/total))) + 'px';
+    el.appendChild(bar);
+  }
+  document.getElementById('stackCaption').textContent = `Pila de ${caState.pila} bandejas`;
+}
+
+const ca$ = id => document.getElementById(id);
+const caNum = v => { const n = parseFloat(String(v).replace(',', '.')); return isNaN(n) ? 0 : n; };
+const caFmt = (n, dec=1) => n.toLocaleString('es-ES', {minimumFractionDigits:dec, maximumFractionDigits:dec});
+
+let caLast = null;
+
+function caCompute(){
+  caRenderStack();
+
+  const kgPedido = caNum(ca$('kgPedido').value);
+  const kgAvance = caNum(ca$('kgAvance').value);
+  const pesoPila = caNum(ca$('pesoPila').value);
+  const bandejasPila = caState.pila;
+  const piezasBandeja = caState.piezasBandeja;
+
+  const diffKg = Math.max(kgPedido - kgAvance, 0);
+  const piezasPorPila = bandejasPila * piezasBandeja;
+  const pesoPorPieza = piezasPorPila > 0 ? pesoPila / piezasPorPila : 0;
+
+  const diffPiezas = pesoPorPieza > 0 ? Math.ceil(diffKg / pesoPorPieza) : 0;
+  const diffBandejas = piezasBandeja > 0 ? Math.ceil(diffPiezas / piezasBandeja) : 0;
+  const pilasExacto = pesoPila > 0 ? diffKg / pesoPila : 0;
+  const diffPilas = pesoPila > 0 ? Math.ceil(pilasExacto) : 0;
+
+  const helper = ca$('pesoPorPiezaHelper');
+  if(pesoPila > 0 && piezasPorPila > 0){
+    helper.textContent = `≈ ${pesoPorPieza.toLocaleString('es-ES',{minimumFractionDigits:3,maximumFractionDigits:3})} kg por pieza`;
+  } else {
+    helper.textContent = 'Ingresa los datos para calcular el peso por pieza';
+  }
+
+  ca$('rKilos').textContent = caFmt(diffKg, 1);
+  ca$('rPiezas').textContent = caFmt(diffPiezas, 0);
+  ca$('rBandejas').textContent = caFmt(diffBandejas, 0);
+  ca$('rPilas').childNodes[0].textContent = caFmt(diffPilas, 0);
+  ca$('rPilasApprox').textContent = `≈ ${caFmt(pilasExacto,1)} exacto`;
+
+  const dot = ca$('statusDot');
+  const status = ca$('statusText');
+  if(kgPedido <= 0){
+    dot.classList.remove('ca-ok'); status.textContent = 'Ingresa los datos del pedido';
+  } else if(pesoPila <= 0){
+    dot.classList.remove('ca-ok'); status.textContent = 'Falta el peso de la pila';
+  } else if(diffKg <= 0){
+    dot.classList.add('ca-ok'); status.textContent = 'Pedido completo';
+  } else {
+    dot.classList.add('ca-ok'); status.textContent = `Faltan ${caFmt(diffKg,1)} kg por completar`;
+  }
+
+  caLast = { kgPedido, kgAvance, diffKg, diffPiezas, diffPilas, pilasExacto, diffBandejas, bandejasPila, piezasBandeja };
+}
+
+['kgPedido','kgAvance','pesoPila'].forEach(id => {
+  ca$(id).addEventListener('input', caCompute);
+});
+
+document.getElementById('btnCopyAvance').addEventListener('click', ()=>{
+  if(!caLast) return;
+  const t = `Control de avance\n`
+    + `Pedido: ${caFmt(caLast.kgPedido,1)} kg — Avance: ${caFmt(caLast.kgAvance,1)} kg\n`
+    + `Pila: ${caLast.bandejasPila} bandejas x ${caLast.piezasBandeja} piezas\n\n`
+    + `Kilos restantes: ${caFmt(caLast.diffKg,1)} kg\n`
+    + `Piezas restantes: ${caFmt(caLast.diffPiezas,0)}\n`
+    + `Bandejas restantes: ${caFmt(caLast.diffBandejas,0)}\n`
+    + `Pilas restantes: ${caFmt(caLast.diffPilas,0)} (≈ ${caFmt(caLast.pilasExacto,1)} exacto)`;
+  navigator.clipboard.writeText(t).then(()=> showToast('Resultados copiados'));
+});
+
+caRenderStack();
+caCompute();
+
+/* ============ SEPARACIÓN DE CALIBRES ============ */
+(function(){
+  const LB_KG = 0.45359237;
+  const STORAGE_KEY = 'calibresAppV1';
+
+  const presets = [
+    {key:'2-3', min:2, max:3, label:'2–3 lb'},
+    {key:'3-4', min:3, max:4, label:'3–4 lb'},
+    {key:'4-5', min:4, max:5, label:'4–5 lb'},
+    {key:'2-4', min:2, max:4, label:'2–4 lb'},
+    {key:'2-5', min:2, max:5, label:'2–5 lb'},
+    {key:'custom', min:null, max:null, label:'Personalizado'}
+  ];
+
+  function defaultState(){
+    return {
+      rendimientos: {CN:33, CM:33},
+      activeVariant: 'CN',
+      activePreset: '2-3',
+      customMin: 2,
+      customMax: 3,
+      calibres: [
+        {id:1, min:6, max:8},
+        {id:2, min:8, max:9},
+        {id:3, min:9, max:10},
+        {id:4, min:10, max:11},
+        {id:5, min:11, max:12},
+        {id:6, min:12, max:13}
+      ],
+      nextId: 7
+    };
+  }
+
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return defaultState();
+      const parsed = JSON.parse(raw);
+      if(!parsed.calibres || !parsed.calibres.length) return defaultState();
+      if(!parsed.rendimientos){
+        const old = parsed.rendimiento || 33;
+        parsed.rendimientos = {CN: old, CM: old};
+        parsed.activeVariant = 'CN';
+      }
+      return parsed;
+    }catch(e){
+      return defaultState();
+    }
+  }
+
+  let state = loadState();
+
+  function saveState(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function lbToKg(lb){ return lb * LB_KG; }
+  function fmt(n, d=2){ return Number(n).toFixed(d); }
+
+  function getTarget(){
+    if(state.activePreset === 'custom'){
+      return {min: parseFloat(state.customMin)||0, max: parseFloat(state.customMax)||0, label:'Personalizado'};
+    }
+    const p = presets.find(p => p.key === state.activePreset);
+    return {min:p.min, max:p.max, label:p.label};
+  }
+
+  function activeRendimiento(){
+    return state.rendimientos[state.activeVariant];
+  }
+
+  function filletRange(calMin, calMax){
+    const r = activeRendimiento()/100;
+    return {min: calMin*r, max: calMax*r};
+  }
+
+  function overlaps(a,b){
+    return a.min <= b.max && b.min <= a.max;
+  }
+
+  function idealCalibreForTarget(target){
+    const r = activeRendimiento()/100;
+    if(r <= 0) return {min:0,max:0};
+    return {min: target.min/r, max: target.max/r};
+  }
+
+  /* ---------- render ---------- */
+
+  function renderChips(){
+    const row = document.getElementById('calChipRow');
+    row.innerHTML = '';
+    presets.forEach(p=>{
+      const chip = document.createElement('div');
+      chip.className = 'chip' + (state.activePreset===p.key ? ' active':'');
+      chip.textContent = p.label;
+      chip.onclick = ()=>{ state.activePreset = p.key; saveState(); renderAll(); };
+      row.appendChild(chip);
+    });
+    document.getElementById('calCustomFields').style.display = state.activePreset==='custom' ? 'flex':'none';
+  }
+
+  const variants = [
+    {key:'CN', label:'C/N'},
+    {key:'CM', label:'C/M'}
+  ];
+
+  function renderVariantChips(){
+    const row = document.getElementById('calVariantRow');
+    row.innerHTML = '';
+    variants.forEach(v=>{
+      const chip = document.createElement('div');
+      chip.className = 'chip' + (state.activeVariant===v.key ? ' active':'');
+      chip.textContent = `${v.label} · ${state.rendimientos[v.key]}%`;
+      chip.onclick = ()=>{ state.activeVariant = v.key; saveState(); renderAll(); };
+      row.appendChild(chip);
+    });
+  }
+
+  function renderResult(){
+    const target = getTarget();
+    const ideal = idealCalibreForTarget(target);
+    const variantLabel = variants.find(v=>v.key===state.activeVariant).label;
+    document.getElementById('calResultBig').textContent =
+      `${fmt(ideal.min,1)}–${fmt(ideal.max,1)} lb`;
+    document.getElementById('calResultSmall').textContent =
+      `(${fmt(lbToKg(ideal.min))}–${fmt(lbToKg(ideal.max))} kg) de pieza entera → filete de ${target.label} al ${activeRendimiento()}% de rendimiento (${variantLabel})`;
+  }
+
+  function renderRuler(){
+    const ruler = document.getElementById('calRuler');
+    ruler.innerHTML = '';
+    const target = getTarget();
+    const idealCal = idealCalibreForTarget(target);
+
+    let lo = Math.min(...state.calibres.map(c=>c.min), idealCal.min);
+    let hi = Math.max(...state.calibres.map(c=>c.max), idealCal.max);
+    lo = Math.floor(lo - 1);
+    hi = Math.ceil(hi + 1);
+    if(hi <= lo) hi = lo + 1;
+    const span = hi - lo;
+
+    const axis = document.createElement('div');
+    axis.className='axis';
+    ruler.appendChild(axis);
+
+    for(let v=lo; v<=hi; v++){
+      const pct = ((v-lo)/span)*100;
+      const tick = document.createElement('div');
+      tick.className='tick';
+      tick.style.left = pct+'%';
+      ruler.appendChild(tick);
+      const lbl = document.createElement('div');
+      lbl.className='tick-label';
+      lbl.style.left = pct+'%';
+      lbl.textContent = v;
+      ruler.appendChild(lbl);
+    }
+
+    state.calibres.forEach((c)=>{
+      const fr = filletRange(c.min,c.max);
+      const isMatch = overlaps(fr, target);
+      const left = ((c.min-lo)/span)*100;
+      const width = ((c.max-c.min)/span)*100;
+      const seg = document.createElement('div');
+      seg.className = 'seg' + (isMatch ? ' match':'');
+      seg.style.left = left+'%';
+      seg.style.width = Math.max(width,1.2)+'%';
+      seg.style.top = '14px';
+      seg.title = `${c.min}-${c.max} lb`;
+      ruler.appendChild(seg);
+    });
+
+    const tLeft = ((idealCal.min-lo)/span)*100;
+    const tWidth = ((idealCal.max-idealCal.min)/span)*100;
+    const targetBar = document.createElement('div');
+    targetBar.className='target';
+    targetBar.style.left = tLeft+'%';
+    targetBar.style.width = Math.max(tWidth,1.2)+'%';
+    ruler.appendChild(targetBar);
+  }
+
+  function renderTable(){
+    const target = getTarget();
+    const body = document.getElementById('calTableBody');
+    body.innerHTML = '';
+    state.calibres
+      .slice()
+      .sort((a,b)=>a.min-b.min)
+      .forEach(c=>{
+        const fr = filletRange(c.min,c.max);
+        const isMatch = overlaps(fr, target);
+        const tr = document.createElement('tr');
+        if(isMatch) tr.className='match';
+        tr.innerHTML = `
+          <td>
+            <div style="display:flex; gap:4px; align-items:center;">
+              <input type="number" step="0.1" value="${c.min}" data-id="${c.id}" data-field="min" style="width:56px;">
+              <span>–</span>
+              <input type="number" step="0.1" value="${c.max}" data-id="${c.id}" data-field="max" style="width:56px;">
+            </div>
+          </td>
+          <td class="kg mono">${fmt(lbToKg(c.min))}–${fmt(lbToKg(c.max))}</td>
+          <td class="mono">${fmt(fr.min,2)}–${fmt(fr.max,2)} lb</td>
+          <td>${isMatch ? '<span class="badge">✓ Calza</span>' : '<span class="badge no">—</span>'}</td>
+          <td><button class="rm-btn" data-rm="${c.id}" title="Eliminar">✕</button></td>
+        `;
+        body.appendChild(tr);
+      });
+
+    body.querySelectorAll('input[data-field]').forEach(inp=>{
+      inp.addEventListener('input', e=>{
+        const id = parseInt(e.target.dataset.id);
+        const field = e.target.dataset.field;
+        const val = parseFloat(e.target.value);
+        const row = state.calibres.find(c=>c.id===id);
+        if(row && !isNaN(val)){
+          row[field] = val;
+          saveState();
+          renderRuler();
+          renderTableBadgesOnly();
+        }
+      });
+    });
+    body.querySelectorAll('button[data-rm]').forEach(btn=>{
+      btn.addEventListener('click', e=>{
+        const id = parseInt(e.target.dataset.rm);
+        state.calibres = state.calibres.filter(c=>c.id!==id);
+        saveState();
+        renderAll();
+      });
+    });
+  }
+
+  function renderTableBadgesOnly(){
+    const target = getTarget();
+    document.querySelectorAll('#calTableBody tr').forEach(tr=>{
+      const minInput = tr.querySelector('input[data-field="min"]');
+      const maxInput = tr.querySelector('input[data-field="max"]');
+      if(!minInput || !maxInput) return;
+      const min = parseFloat(minInput.value), max = parseFloat(maxInput.value);
+      const fr = filletRange(min,max);
+      const isMatch = overlaps(fr, target);
+      tr.className = isMatch ? 'match' : '';
+      tr.querySelector('td:nth-child(2)').textContent = `${fmt(lbToKg(min))}–${fmt(lbToKg(max))}`;
+      tr.querySelector('td:nth-child(3)').textContent = `${fmt(fr.min,2)}–${fmt(fr.max,2)} lb`;
+      tr.querySelector('td:nth-child(4)').innerHTML = isMatch ? '<span class="badge">✓ Calza</span>' : '<span class="badge no">—</span>';
+    });
+  }
+
+  function renderAll(){
+    renderChips();
+    renderVariantChips();
+    renderResult();
+    renderRuler();
+    renderTable();
+  }
+
+  /* ---------- conversor rápido (rango) ---------- */
+  function bindConvPair(lbId, kgId){
+    const lbEl = document.getElementById(lbId);
+    const kgEl = document.getElementById(kgId);
+    lbEl.addEventListener('input', e=>{
+      const lb = parseFloat(e.target.value);
+      kgEl.value = isNaN(lb) ? '' : fmt(lbToKg(lb));
+    });
+    kgEl.addEventListener('input', e=>{
+      const kg = parseFloat(e.target.value);
+      lbEl.value = isNaN(kg) ? '' : fmt(kg/LB_KG);
+    });
+  }
+  bindConvPair('calLbMinInput','calKgMinInput');
+  bindConvPair('calLbMaxInput','calKgMaxInput');
+
+  document.getElementById('calAddRangeToTableBtn').addEventListener('click', ()=>{
+    const lbMin = parseFloat(document.getElementById('calLbMinInput').value);
+    const lbMax = parseFloat(document.getElementById('calLbMaxInput').value);
+    if(isNaN(lbMin) || isNaN(lbMax)){
+      alert('Ingresa el mínimo y el máximo (en libras o en kilos) antes de agregar el rango.');
+      return;
+    }
+    const min = Math.min(lbMin, lbMax);
+    const max = Math.max(lbMin, lbMax);
+    state.calibres.push({id: state.nextId++, min, max});
+    saveState();
+    renderAll();
+  });
+
+  /* ---------- events ---------- */
+
+  document.getElementById('calRendCN').value = state.rendimientos.CN;
+  document.getElementById('calRendCM').value = state.rendimientos.CM;
+  document.getElementById('calRendCN').addEventListener('input', e=>{
+    const v = parseFloat(e.target.value);
+    if(!isNaN(v) && v>0){
+      state.rendimientos.CN = v;
+      saveState();
+      renderVariantChips();
+      renderResult();
+      renderRuler();
+      renderTableBadgesOnly();
+    }
+  });
+  document.getElementById('calRendCM').addEventListener('input', e=>{
+    const v = parseFloat(e.target.value);
+    if(!isNaN(v) && v>0){
+      state.rendimientos.CM = v;
+      saveState();
+      renderVariantChips();
+      renderResult();
+      renderRuler();
+      renderTableBadgesOnly();
+    }
+  });
+
+  document.getElementById('calCustomMin').value = state.customMin;
+  document.getElementById('calCustomMax').value = state.customMax;
+  document.getElementById('calCustomMin').addEventListener('input', e=>{
+    state.customMin = parseFloat(e.target.value)||0;
+    saveState(); renderResult(); renderRuler(); renderTableBadgesOnly();
+  });
+  document.getElementById('calCustomMax').addEventListener('input', e=>{
+    state.customMax = parseFloat(e.target.value)||0;
+    saveState(); renderResult(); renderRuler(); renderTableBadgesOnly();
+  });
+
+  document.getElementById('calAddRowBtn').addEventListener('click', ()=>{
+    const lastMax = state.calibres.length ? Math.max(...state.calibres.map(c=>c.max)) : 6;
+    state.calibres.push({id: state.nextId++, min: lastMax, max: lastMax+1});
+    saveState();
+    renderAll();
+  });
+
+  renderAll();
+})();
+</script>
+</body>
+</html>
