@@ -509,74 +509,240 @@
     #view-avance *{ transition:none !important; }
   }
 
-  /* ================= SEPARACIÓN DE CALIBRES (scoped) ================= */
-  #view-calibres{
-    --bg:#F3F6F5;
-    --panel:#FFFFFF;
-    --ink:#152526;
-    --ink-soft:#5B6E70;
-    --line:#DCE4E3;
-    --teal:#0F454F;
-    --teal-deep:#0B333B;
-    --steel:#3A6B75;
-    --salmon:#E8785A;
-    --salmon-soft:#FCE3DA;
-    --ok:#3E8E6B;
-    --radius:14px;
-    background:var(--bg);
+  /* ================= SEPARACIÓN DE CALIBRES (scoped, unificado con Reporte Turno) ================= */
+  #view-calibres main{ padding-top:18px; }
+  #view-calibres .card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px;
+    margin-bottom:14px;
+  }
+  #view-calibres .card h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:16px;
+    font-weight:700;
+    color:var(--deep);
+    margin:0 0 4px;
+  }
+  #view-calibres .card .sub{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin-bottom:12px;
+    line-height:1.4;
+  }
+  #view-calibres label{
+    display:block;
+    font-size:12px;
+    color:var(--ink-soft);
+    margin-bottom:4px;
+  }
+  #view-calibres input[type=number]{
+    width:100%;
+    padding:10px 10px;
+    border-radius:9px;
+    border:1px solid var(--line);
+    background:var(--foam);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:14px;
+    font-weight:600;
     color:var(--ink);
   }
-  #view-calibres h1, #view-calibres h2, #view-calibres h3{font-family:'Space Grotesk',sans-serif;margin:0;}
-  #view-calibres .mono{font-family:'IBM Plex Mono',monospace;}
+  #view-calibres input[type=number]:focus{
+    outline:none; border-color:var(--tide); box-shadow:0 0 0 3px rgba(18,88,102,0.12);
+  }
+  #view-calibres .conv-row{ display:flex; gap:10px; align-items:flex-end; margin-bottom:2px; }
+  #view-calibres .conv-row > div{ flex:1; }
+  #view-calibres .rend-grid{ display:flex; gap:14px; margin-bottom:14px; }
+  #view-calibres .rend-grid > div{ flex:1; }
+  #view-calibres .rend-note{ font-size:12px; color:var(--ink-soft); margin-top:8px; line-height:1.4; }
+  #view-calibres .chip-row{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+  #view-calibres .chip{
+    padding:8px 14px; border-radius:999px; border:1px solid var(--line);
+    background:var(--foam); font-size:13px; font-weight:600; color:var(--deep);
+    cursor:pointer; font-family:'IBM Plex Mono',monospace;
+  }
+  #view-calibres .chip.active{ background:var(--salmon); border-color:var(--salmon); color:#fff; }
+  #view-calibres .custom-fields{ display:flex; gap:10px; margin-bottom:12px; }
+  #view-calibres .custom-fields > div{ flex:1; }
+  #view-calibres .result-box{
+    margin-top:12px; padding:14px; border-radius:10px;
+    background:var(--salmon-dim); border:1px dashed var(--salmon);
+  }
+  #view-calibres .result-box .big{
+    font-family:'IBM Plex Mono',monospace; font-size:19px; font-weight:700; color:var(--deep);
+  }
+  #view-calibres .result-box .small{ font-size:12px; color:var(--ink-soft); margin-top:4px; line-height:1.4; }
+  #view-calibres .ruler-wrap{ padding-top:6px; }
+  #view-calibres .ruler{ position:relative; height:64px; margin:10px 4px 26px; }
+  #view-calibres .ruler .axis{ position:absolute; left:0; right:0; top:34px; height:1px; background:var(--line); }
+  #view-calibres .ruler .tick{ position:absolute; top:30px; width:1px; height:9px; background:var(--ink-soft); }
+  #view-calibres .ruler .tick-label{
+    position:absolute; top:41px; font-size:10px; color:var(--ink-soft);
+    font-family:'IBM Plex Mono',monospace; transform:translateX(-50%);
+  }
+  #view-calibres .ruler .seg{ position:absolute; top:14px; height:16px; border-radius:8px; background:var(--tide); opacity:.85; }
+  #view-calibres .ruler .seg.match{ background:var(--salmon); }
+  #view-calibres .ruler .target{
+    position:absolute; top:6px; height:32px; border-radius:9px;
+    border:2px dashed var(--deep); background:rgba(14,59,68,0.06);
+  }
+  #view-calibres .legend{ display:flex; flex-wrap:wrap; gap:14px; font-size:11.5px; color:var(--ink-soft); margin-top:2px; }
+  #view-calibres .legend span{ display:inline-flex; align-items:center; gap:5px; }
+  #view-calibres .legend .dot{ width:9px; height:9px; border-radius:3px; display:inline-block; }
+  #view-calibres table{ width:100%; border-collapse:collapse; font-size:12.5px; }
+  #view-calibres th{
+    text-align:left; font-family:'IBM Plex Mono',monospace; font-size:10.5px;
+    letter-spacing:.03em; text-transform:uppercase; color:var(--ink-soft);
+    padding:6px 6px; border-bottom:1px solid var(--line);
+  }
+  #view-calibres td{ padding:6px 6px; border-bottom:1px solid #EEF4F3; vertical-align:middle; }
+  #view-calibres tr.match td{ background:var(--salmon-dim); }
+  #view-calibres td input[type=number]{ padding:6px 7px; font-size:12.5px; }
+  #view-calibres .kg{ color:var(--ink-soft); font-size:11px; }
+  #view-calibres .badge{
+    font-size:10.5px; font-weight:700; padding:3px 8px; border-radius:999px;
+    background:#E5F3EA; color:var(--ok); font-family:'IBM Plex Mono',monospace;
+  }
+  #view-calibres .badge.no{ background:#F0F0F0; color:#9AA5A6; }
+  #view-calibres .rm-btn{ border:none; background:none; color:var(--warn); font-size:16px; cursor:pointer; line-height:1; }
+  #view-calibres .add-row{
+    margin-top:10px; width:100%; padding:11px; border-radius:10px;
+    border:1px dashed var(--tide); background:none; color:var(--tide);
+    font-weight:600; font-size:13px; cursor:pointer; font-family:'Space Grotesk',sans-serif;
+  }
+  #view-calibres .cal-footer{ text-align:center; font-size:11px; color:var(--ink-soft); padding:20px; }
 
-  #view-calibres .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px;}
-  #view-calibres .card h2{font-size:15px;color:var(--teal-deep);margin-bottom:2px;}
-  #view-calibres .card .sub{font-size:12.5px;color:var(--ink-soft);margin-bottom:12px;}
+  /* ================= TIEMPO DE SELLADO (scoped) ================= */
+  #view-sellado{
+    --cs-bg:#14181a;
+    --cs-surface:#1e262b;
+    --cs-surface-2:#242d33;
+    --cs-line:#303a40;
+    --cs-accent:#5b87a6;
+    --cs-accent-dim: rgba(91,135,166,0.18);
+    --cs-text:#edeae2;
+    --cs-muted:#8b98a0;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(91,135,166,0.14), transparent 60%),
+      var(--cs-bg);
+    color:var(--cs-text);
+  }
+  #view-sellado .subnav{ background:var(--cs-bg); max-width:480px; }
+  #view-sellado .back-btn{ color:var(--cs-accent); }
+  #view-sellado .cs-wrap{max-width:480px;margin:0 auto;padding:16px 14px 60px;}
+  #view-sellado .cs-header{margin-bottom:22px;}
+  #view-sellado .cs-eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--cs-accent);
+    display:flex; align-items:center; gap:8px; margin-bottom:8px;
+  }
+  #view-sellado .cs-eyebrow::before{
+    content:""; width:7px;height:7px;border-radius:50%;
+    background:var(--cs-accent); box-shadow:0 0 0 3px var(--cs-accent-dim);
+  }
+  #view-sellado h1{
+    font-family:'Space Grotesk', sans-serif; font-weight:700;
+    font-size:25px; line-height:1.15; margin:0 0 4px; letter-spacing:-0.01em;
+    color:var(--cs-text);
+  }
+  #view-sellado .cs-sub{ color:var(--cs-muted); font-size:13.5px; }
+  #view-sellado .cs-card{
+    background:var(--cs-surface); border:1px solid var(--cs-line);
+    border-radius:16px; padding:18px 16px; margin-bottom:14px;
+    box-shadow:0 8px 20px -12px rgba(0,0,0,0.5);
+  }
+  #view-sellado .cs-card-title{
+    font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:13px;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--cs-text);
+    display:flex; align-items:center; gap:8px; margin:0 0 14px;
+  }
+  #view-sellado .cs-card-title .cs-n{
+    font-family:'IBM Plex Mono',monospace; color:var(--cs-bg); background:var(--cs-accent);
+    font-size:11px; font-weight:700; width:20px;height:20px; border-radius:6px;
+    display:flex;align-items:center;justify-content:center; flex-shrink:0;
+  }
+  #view-sellado label.cs-field{ display:block; margin-bottom:12px; }
+  #view-sellado label.cs-field:last-child{ margin-bottom:0; }
+  #view-sellado .cs-field-label{ display:block; font-size:12.5px; color:var(--cs-muted); margin-bottom:6px; }
+  #view-sellado .cs-num, #view-sellado input[type=time]{
+    width:100%; background:var(--cs-surface-2); border:1px solid var(--cs-line);
+    border-radius:10px; padding:12px 12px; color:var(--cs-text);
+    font-family:'IBM Plex Mono',monospace; font-size:17px; font-weight:600;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  #view-sellado .cs-num::placeholder{ color:#5a656b; font-weight:500; }
+  #view-sellado .cs-num:focus, #view-sellado input[type=time]:focus{
+    outline:none; border-color:var(--cs-accent); box-shadow:0 0 0 3px var(--cs-accent-dim);
+  }
+  #view-sellado .cs-choice-row{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+  #view-sellado .cs-choice{
+    background:var(--cs-surface-2); border:1px solid var(--cs-line); border-radius:10px;
+    padding:12px 8px; text-align:center; cursor:pointer; color:var(--cs-text);
+    font-family:'IBM Plex Mono',monospace; transition:border-color .15s, background .15s, transform .1s;
+  }
+  #view-sellado .cs-choice:active{ transform:scale(0.98); }
+  #view-sellado .cs-choice .cs-big{ display:block; font-size:19px; font-weight:700; line-height:1.2;}
+  #view-sellado .cs-choice .cs-lbl{ display:block; font-size:10px; color:var(--cs-muted); text-transform:uppercase; letter-spacing:.03em; margin-top:2px; font-family:'Inter',sans-serif;}
+  #view-sellado .cs-choice[aria-pressed="true"]{ border-color:var(--cs-accent); background:var(--cs-accent-dim); }
+  #view-sellado .cs-choice[aria-pressed="true"] .cs-big{ color:var(--cs-accent); }
+  #view-sellado .cs-choice:focus-visible{ outline:2px solid var(--cs-accent); outline-offset:2px; }
+  #view-sellado .cs-results-card{
+    background:linear-gradient(180deg, var(--cs-surface-2), var(--cs-surface));
+    border:1px solid var(--cs-line); border-radius:16px; padding:18px 16px 16px;
+    box-shadow:0 10px 26px -14px rgba(0,0,0,0.6);
+  }
+  #view-sellado .cs-results-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+  #view-sellado .cs-result{ background:rgba(0,0,0,0.18); border:1px solid var(--cs-line); border-radius:10px; padding:12px 12px 10px; }
+  #view-sellado .cs-result.cs-wide{ grid-column:1/-1; }
+  #view-sellado .cs-result .cs-val{
+    font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:26px; color:var(--cs-accent);
+    line-height:1.1; text-shadow:0 0 18px rgba(91,135,166,0.35);
+  }
+  #view-sellado .cs-result .cs-lbl{ display:block; font-size:11px; color:var(--cs-muted); text-transform:uppercase; letter-spacing:.04em; margin-top:6px; }
+  #view-sellado .cs-copy-btn{
+    width:100%; background:var(--cs-accent); color:#fff;
+    border:none; border-radius:10px; padding:12px 14px;
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13.5px;
+    cursor:pointer; margin-top:2px;
+  }
+  #view-sellado .cs-copy-btn:active{ background:#4a728c; }
+  #view-sellado .cs-footer{ text-align:center; font-size:11px; color:#5a656b; margin-top:20px; font-family:'IBM Plex Mono',monospace; }
 
-  #view-calibres label{font-size:12px;color:var(--ink-soft);display:block;margin-bottom:4px;}
-  #view-calibres input[type=number]{width:100%;padding:9px 10px;border-radius:9px;border:1px solid var(--line);background:#FBFCFC;font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--ink);}
-  #view-calibres input[type=number]:focus{outline:2px solid var(--steel);outline-offset:1px;}
-
-  #view-calibres .conv-row{display:flex;gap:10px;align-items:flex-end;}
-  #view-calibres .conv-row > div{flex:1;}
-
-  #view-calibres .rend-grid{display:flex;gap:14px;margin-bottom:14px;}
-  #view-calibres .rend-grid > div{flex:1;}
-  #view-calibres .rend-note{font-size:12px;color:var(--ink-soft);margin-top:8px;}
-
-  #view-calibres .chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
-  #view-calibres .chip{padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:#F0F4F3;font-size:13px;font-weight:600;color:var(--teal-deep);cursor:pointer;font-family:'IBM Plex Mono',monospace;}
-  #view-calibres .chip.active{background:var(--salmon);border-color:var(--salmon);color:#fff;}
-  #view-calibres .custom-fields{display:flex;gap:10px;}
-  #view-calibres .custom-fields > div{flex:1;}
-
-  #view-calibres .result-box{margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--salmon-soft);border:1px dashed var(--salmon);}
-  #view-calibres .result-box .big{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:700;color:var(--teal-deep);}
-  #view-calibres .result-box .small{font-size:12px;color:var(--ink-soft);margin-top:3px;}
-
-  #view-calibres .ruler-wrap{padding-top:6px;}
-  #view-calibres .ruler{position:relative;height:64px;margin:10px 4px 26px;}
-  #view-calibres .ruler .axis{position:absolute;left:0;right:0;top:34px;height:1px;background:var(--line);}
-  #view-calibres .ruler .tick{position:absolute;top:30px;width:1px;height:9px;background:var(--ink-soft);}
-  #view-calibres .ruler .tick-label{position:absolute;top:41px;font-size:10px;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;transform:translateX(-50%);}
-  #view-calibres .ruler .seg{position:absolute;top:14px;height:16px;border-radius:8px;background:var(--steel);opacity:.85;}
-  #view-calibres .ruler .seg.match{background:var(--salmon);}
-  #view-calibres .ruler .target{position:absolute;top:6px;height:32px;border-radius:9px;border:2px dashed var(--teal-deep);background:rgba(15,69,79,0.06);}
-  #view-calibres .legend{display:flex;gap:16px;font-size:11.5px;color:var(--ink-soft);margin-top:2px;}
-  #view-calibres .legend span{display:inline-flex;align-items:center;gap:5px;}
-  #view-calibres .legend .dot{width:9px;height:9px;border-radius:3px;display:inline-block;}
-
-  #view-calibres table{width:100%;border-collapse:collapse;font-size:12.5px;}
-  #view-calibres th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--ink-soft);padding:6px 6px;border-bottom:1px solid var(--line);}
-  #view-calibres td{padding:6px 6px;border-bottom:1px solid #EEF2F1;vertical-align:middle;}
-  #view-calibres tr.match td{background:var(--salmon-soft);}
-  #view-calibres td input[type=number]{padding:6px 7px;font-size:12.5px;}
-  #view-calibres .kg{color:var(--ink-soft);font-size:11px;}
-  #view-calibres .badge{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:999px;background:#E3EFE9;color:var(--ok);font-family:'IBM Plex Mono',monospace;}
-  #view-calibres .badge.no{background:#F0F0F0;color:#9AA5A6;}
-  #view-calibres .rm-btn{border:none;background:none;color:#B9433B;font-size:16px;cursor:pointer;line-height:1;}
-  #view-calibres .add-row{margin-top:10px;width:100%;padding:10px;border-radius:9px;border:1px dashed var(--steel);background:none;color:var(--teal);font-weight:600;font-size:13px;cursor:pointer;}
-  #view-calibres .cal-footer{text-align:center;font-size:11px;color:var(--ink-soft);padding:20px;}
+  #view-sellado .cs-helper{
+    margin:10px 2px 0; font-size:11.5px; color:var(--cs-accent);
+    font-family:'IBM Plex Mono',monospace;
+  }
+  #view-sellado .cs-slider-value{
+    display:flex; align-items:baseline; gap:8px; justify-content:center;
+    margin-bottom:10px;
+  }
+  #view-sellado .cs-slider-value span:first-child{
+    font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:38px;
+    color:var(--cs-accent); line-height:1;
+  }
+  #view-sellado .cs-slider-unit{ font-size:12px; color:var(--cs-muted); }
+  #view-sellado input[type=range]{
+    -webkit-appearance:none; appearance:none;
+    width:100%; height:6px; border-radius:999px;
+    background:var(--cs-line); outline:none; margin:6px 0 4px;
+  }
+  #view-sellado input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none;
+    width:26px; height:26px; border-radius:50%;
+    background:var(--cs-accent); border:3px solid var(--cs-surface);
+    box-shadow:0 2px 8px rgba(0,0,0,0.4); cursor:pointer;
+  }
+  #view-sellado input[type=range]::-moz-range-thumb{
+    width:26px; height:26px; border-radius:50%; border:3px solid var(--cs-surface);
+    background:var(--cs-accent); box-shadow:0 2px 8px rgba(0,0,0,0.4); cursor:pointer;
+  }
+  #view-sellado .cs-slider-scale{
+    display:flex; justify-content:space-between;
+    font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--cs-muted);
+    padding:0 2px;
+  }
 </style>
 </head>
 <body>
@@ -610,6 +776,14 @@
       <span class="nav-card-text">
         <span class="nav-card-title">Separación de Calibres</span>
         <span class="nav-card-desc">Convierte lb ⇄ kg y calcula el calibre de pieza entera para tu pedido</span>
+      </span>
+      <span class="nav-card-arrow">›</span>
+    </button>
+    <button class="nav-card dark" data-nav="view-sellado">
+      <span class="nav-card-icon">⏱️</span>
+      <span class="nav-card-text">
+        <span class="nav-card-title">Tiempo de Sellado</span>
+        <span class="nav-card-desc">Calcula cuánto demora la Multivac R245 según piezas y velocidad</span>
       </span>
       <span class="nav-card-arrow">›</span>
     </button>
@@ -900,9 +1074,9 @@
         <div class="ruler" id="calRuler"></div>
       </div>
       <div class="legend">
-        <span><span class="dot" style="background:var(--steel)"></span>Calibre</span>
+        <span><span class="dot" style="background:var(--tide)"></span>Calibre</span>
         <span><span class="dot" style="background:var(--salmon)"></span>Coincide con pedido</span>
-        <span><span class="dot" style="background:transparent;border:2px dashed var(--teal-deep)"></span>Rango ideal calculado</span>
+        <span><span class="dot" style="background:transparent;border:2px dashed var(--deep)"></span>Rango ideal calculado</span>
       </div>
     </div>
 
@@ -927,6 +1101,66 @@
   </main>
 
   <footer class="cal-footer">Los datos de calibres y rendimiento quedan guardados solo en este dispositivo/navegador.</footer>
+</div>
+
+<!-- ============ TIEMPO DE SELLADO ============ -->
+<div id="view-sellado" class="view">
+  <div class="subnav">
+    <button class="back-btn" data-nav="view-home">← Inicio</button>
+  </div>
+  <div class="cs-wrap">
+
+    <header class="cs-header">
+      <div class="cs-eyebrow">Termoformadora Multivac R245</div>
+      <h1>Tiempo de sellado</h1>
+      <div class="cs-sub">Estima cuánto demora sellar según la cantidad de piezas.</div>
+    </header>
+
+    <section class="cs-card">
+      <p class="cs-card-title"><span class="cs-n">1</span> 🧾 Piezas a sellar</p>
+      <label class="cs-field">
+        <span class="cs-field-label">Cantidad de filetes</span>
+        <input type="text" class="cs-num" id="csPiezas" inputmode="numeric" placeholder="0">
+      </label>
+      <p class="cs-helper" id="csPiezasHelper">Ingresa una cantidad</p>
+    </section>
+
+    <section class="cs-card">
+      <p class="cs-card-title"><span class="cs-n">2</span> ⚙️ Velocidad de sellado</p>
+      <div class="cs-slider-value"><span id="csVelValue">10</span><span class="cs-slider-unit">piezas/min</span></div>
+      <input type="range" id="csVelSlider" min="7" max="13" step="1" value="10">
+      <div class="cs-slider-scale"><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span></div>
+    </section>
+
+    <section class="cs-card">
+      <p class="cs-card-title"><span class="cs-n">3</span> 🕐 Hora de inicio</p>
+      <label class="cs-field">
+        <span class="cs-field-label">Opcional — si la dejas vacía se usa la hora actual</span>
+        <input type="time" id="csHoraInicio">
+      </label>
+    </section>
+
+    <section class="cs-results-card">
+      <p class="cs-card-title" style="margin-bottom:12px;">Estimación</p>
+      <div class="cs-results-grid">
+        <div class="cs-result cs-wide">
+          <span class="cs-val" id="csTiempo">00:00:00</span>
+          <span class="cs-lbl">Tiempo estimado (hh:mm:ss)</span>
+        </div>
+        <div class="cs-result">
+          <span class="cs-val" id="csVelActual">10</span>
+          <span class="cs-lbl">Piezas / minuto</span>
+        </div>
+        <div class="cs-result">
+          <span class="cs-val" id="csHoraFin">—</span>
+          <span class="cs-lbl">Hora estimada de término</span>
+        </div>
+      </div>
+      <button class="cs-copy-btn" id="btnCopySellado">Copiar resultado</button>
+    </section>
+
+    <footer class="cs-footer">Multivac R245 — sella entre 10 y 12 piezas enteras por minuto</footer>
+  </div>
 </div>
 
 <div class="toast" id="toast">Copiado</div>
@@ -1641,6 +1875,67 @@ caCompute();
 
   renderAll();
 })();
+
+/* ============ TIEMPO DE SELLADO ============ */
+const csState = { vel: 10 };
+let csLast = null;
+
+const csVelSlider = document.getElementById('csVelSlider');
+csVelSlider.addEventListener('input', ()=>{
+  csState.vel = Number(csVelSlider.value);
+  document.getElementById('csVelValue').textContent = csState.vel;
+  csCompute();
+});
+
+function csCompute(){
+  const piezas = caNum(document.getElementById('csPiezas').value);
+  const vel = csState.vel;
+
+  const helper = document.getElementById('csPiezasHelper');
+  helper.textContent = piezas > 0 ? `= ${piezas} filetes a sellar` : 'Ingresa una cantidad';
+
+  const totalMin = vel > 0 ? piezas / vel : 0;
+  const totalSec = Math.round(totalMin * 60);
+  const hh = Math.floor(totalSec / 3600);
+  const mm = Math.floor((totalSec % 3600) / 60);
+  const ss = totalSec % 60;
+  const hhmmss = `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+
+  document.getElementById('csTiempo').textContent = hhmmss;
+  document.getElementById('csVelActual').textContent = vel;
+
+  const horaInicioInput = document.getElementById('csHoraInicio').value;
+  let start = new Date();
+  if(horaInicioInput){
+    const [h, m] = horaInicioInput.split(':').map(Number);
+    start.setHours(h, m, 0, 0);
+  }
+  let horaFinText = '—';
+  if(piezas > 0){
+    const end = new Date(start.getTime() + totalSec * 1000);
+    const hhF = String(end.getHours()).padStart(2,'0');
+    const mi = String(end.getMinutes()).padStart(2,'0');
+    horaFinText = `${hhF}:${mi} Hrs`;
+  }
+  document.getElementById('csHoraFin').textContent = horaFinText;
+
+  csLast = { piezas, vel, hhmmss, horaFinText };
+}
+
+document.getElementById('csPiezas').addEventListener('input', csCompute);
+document.getElementById('csHoraInicio').addEventListener('input', csCompute);
+
+document.getElementById('btnCopySellado').addEventListener('click', ()=>{
+  if(!csLast) return;
+  const t = `Tiempo de sellado — Multivac R245\n`
+    + `Filetes a sellar: ${csLast.piezas}\n`
+    + `Velocidad: ${csLast.vel} piezas/min\n`
+    + `Tiempo estimado: ${csLast.hhmmss} (hh:mm:ss)\n`
+    + `Hora estimada de término: ${csLast.horaFinText}`;
+  navigator.clipboard.writeText(t).then(()=> showToast('Resultado copiado'));
+});
+
+csCompute();
 </script>
 </body>
 </html>
